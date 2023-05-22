@@ -1,6 +1,12 @@
 
+/**
+ * ASCII-fy a string, turning Icelandic characters into ASCII.
+ * @param s String to ASCII-fy.
+ * @returns ASCII-fied string with no characters
+ * specific to Icelandic.
+ */
 export function asciify(s: string) {
-    let icechar2ascii = {
+    const icechar2ascii = {
         "ð": "d",
         "Ð": "D",
         "á": "a",

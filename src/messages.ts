@@ -48,12 +48,12 @@ export class GreetingsOutputMessage {
 
     /**
      * Create a greetings message from a session config object.
-     * @param config Session config object
-     * @returns Greetings message
+     * @param config Session config object.
+     * @returns Greetings message.
      */
     static fromConfig(config: EmblaSessionConfig): GreetingsOutputMessage {
         // Engine options
-        let asrOpts: ASROptions = {};
+        const asrOpts: ASROptions = {};
         if (config.engine !== undefined) {
             asrOpts.engine = config.engine;
         }
@@ -63,7 +63,7 @@ export class GreetingsOutputMessage {
         // }
 
         // Query options, which includes client details.
-        let qOpts: QueryOptions = {};
+        const qOpts: QueryOptions = {};
         qOpts.url = `${config.queryServer}/query.api`;
         if (config.privateMode === false) {
             // Client details are only sent if the session is not private.
@@ -77,15 +77,15 @@ export class GreetingsOutputMessage {
                 qOpts.client_version = config.clientVersion;
             }
             if (config.getLocation !== undefined) {
-                let loc = config.getLocation!();
-                if (loc?.length == 2) {
+                const loc = config.getLocation!();
+                if (loc?.length === 2) {
                     qOpts.latitude = loc[0];
                     qOpts.longitude = loc[1];
                 }
             }
         }
 
-        let ttsOpts: TTSOptions = {};
+        const ttsOpts: TTSOptions = {};
         // Speech synthesis settings
         ttsOpts.voice_id = config.voiceID;
         ttsOpts.voice_speed = config.voiceSpeed;
@@ -110,7 +110,7 @@ export class GreetingsOutputMessage {
 
     /** Convert this message object to a JSON string representation. */
     toJSON(): string {
-        let msg = {
+        const msg = {
             "type": this.type,
             "token": this.token,
             "data": this.data

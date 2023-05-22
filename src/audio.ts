@@ -1,52 +1,34 @@
-// /// Audio playback handling
 
-// // import * as common from "./common.js";
-// // import * as util from "./util.js";
-
-
-// // List of audio file assets in bundle
-// const audioFiles = [
-//     // Voice-independent
-//     'rec_begin',
-//     'rec_cancel',
-//     'rec_confirm',
-//     // Voice dependent
-//     'conn-gudrun',
-//     'conn-gunnar',
-//     'err-gudrun',
-//     'err-gunnar',
-//     'mynameis-gudrun',
-//     'mynameis-gunnar',
-//     'voicespeed-gudrun',
-//     'voicespeed-gunnar',
-//     'nomic-gudrun',
-//     'nomic-gunnar',
-//     'dunno01-gudrun',
-//     'dunno02-gudrun',
-//     'dunno03-gudrun',
-//     'dunno04-gudrun',
-//     'dunno05-gudrun',
-//     'dunno06-gudrun',
-//     'dunno07-gudrun',
-//     'dunno01-gunnar',
-//     'dunno02-gunnar',
-//     'dunno03-gunnar',
-//     'dunno04-gunnar',
-//     'dunno05-gunnar',
-//     'dunno06-gunnar',
-//     'dunno07-gunnar',
-// ];
-// const audioFilePath = "../assets/audio/";
-// const audioFileSuffix = "wav";
-
-// // These sounds are the same regardless of voice ID settings
-// const sessionSounds = [
-//     'rec_begin',
-//     'rec_cancel',
-//     'rec_confirm',
-// ];
-
-// /// Audio playback singleton class
-// class AudioPlayer {
-
-// }
+export class AudioPlayer {
+    static async init() {
+        // TODO
+    }
+    static async playSessionStart() {
+        // TODO
+    }
+    static async playSessionConfirm() {
+        // TODO
+    }
+    static async playSessionCancel() {
+        // TODO
+    }
+    static async playNoMic(voiceId?: string) {
+        // TODO
+        console.log(voiceId);
+    }
+    static async playSound(soundName: string, voiceId?: string, playbackSpeed?: number) {
+        // TODO
+        console.log(soundName);
+        console.log(voiceId);
+        console.log(playbackSpeed);
+    }
+    static async playDunno() {
+        // TODO
+    }
+    static async playURL() {
+        // TODO
+    }
+    static stop() {
+        // TODO
+    }
+}

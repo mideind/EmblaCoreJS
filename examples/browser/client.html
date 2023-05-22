@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>EmblaCoreJS Test Client</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- <link rel="icon" type="image/png" sizes="16x16" href="/static/img/icon_16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/icon_32.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/static/img/icon_64.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/static/img/icon_96.png"> -->
+
+    <!--
+        RecordRTC dependency,
+        needed for EmblaCoreJS in browser environment.
+        Ensure CDN version matches the version specified in package.json.
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.6.2/RecordRTC.js"></script>
+    <script type="module" src="./emblacore.js"></script>
+
+</head>
+
+<body>
+
+    <h1>
+        <!-- <img src="/static/img/icon.png" height="40" width="40" style="margin-bottom:-8px;"> -->
+        &nbsp;
+        EmblaCoreJS Test Client
+    </h1>
+
+    <p>
+        <strong>Server URL</strong>
+        &nbsp;&nbsp;
+        <input type="text" value="https://api.greynir.is" id="server_url" style="width:293px">
+    </p>
+
+    <input type="button" value="Stream microphone" id="start_button">
+
+    <br>
+    <br>
+
+    <p><em>See developer console for output.</em></p>
+
+</body>
+
+<script type="module">
+    const API_KEY = "YOUR API KEY HERE";
+    const button = document.getElementById("start_button");
+    const url_input = document.getElementById("server_url");
+
+    var config = new EmblaCore.EmblaSessionConfig(url_input.value);
+    var idle = true;
+    function toggle_start() {
+        if (idle) {
+            idle = !idle;
+            button.value = "Cancel session";
+            console.log("Starting session...");
+            //var session = new EmblaCore.EmblaSession(config = config);
+        } else {
+            idle = !idle;
+            button.value = "Stream microphone";
+            console.log("Cancelling session...");
+        }
+    }
+
+    // Add click event listener to the start button
+    button.addEventListener("click", (event) => { toggle_start(); });
+    // Add change event listener to url input
+    url_input.addEventListener("change", (event) => {
+        config = new EmblaCore.EmblaSessionConfig(event.target.value);
+    });
+</script>
+
+</html>

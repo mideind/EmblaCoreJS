@@ -1,6 +1,6 @@
 
 
-/** Authentication token object required to start a session. */
+/** Authentication token object required to start a WebSocket session. */
 export class AuthenticationToken {
 
     constructor(
@@ -8,13 +8,18 @@ export class AuthenticationToken {
         public expiresAt: Date
     ) { }
 
-    static fromJson(data: string): AuthenticationToken {
+    /**
+     * Create an AuthenticationToken from JSON string data.
+     * @param data JSON string to parse.
+     * @returns AuthenticationToken instance.
+     */
+    public static fromJson(data: string): AuthenticationToken {
         let tokenString: string;
         let expiresAt: Date;
         try {
-            let parsed = JSON.parse(data);
-            tokenString = parsed["token"];
-            expiresAt = new Date(parsed["expires_at"]);
+            const parsed = JSON.parse(data);
+            tokenString = parsed.token;
+            expiresAt = new Date(parsed.expires_at);
         } catch (e) {
             console.debug(`Failed to parse token JSON: ${e}`);
             tokenString = "";
@@ -23,9 +28,13 @@ export class AuthenticationToken {
         return new AuthenticationToken(tokenString, expiresAt);
     }
 
+    /**
+     * Check whether token is safe to use for a new WebSocket session.
+     * @returns true if token is expired (or almost expired), false otherwise
+     */
     isExpired(): boolean {
         // If token expires in less than 30 seconds, consider it expired.
-        let thirtySeconds = 30e3; // 30e3 is 30 seconds in milliseconds
+        const thirtySeconds = 30e3; // 30e3 is 30 seconds in milliseconds
         return this.expiresAt.getTime() < Date.now() - thirtySeconds;
     }
 
