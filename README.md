@@ -18,20 +18,20 @@ npm run build
 
 This compiles the TypeScript code into JavaScript libraries found in `lib/`, named `lib/emblacore.js` and `lib/emblacore.min.js`.
 
+## Documentation
+
+Documentation can be generated after building the project by running:
+
+```sh
+npm run doc
+```
+
 ## Testing
 
 Tests can be run with:
 
 ```sh
 npm run test
-```
-
-## Documentation
-
-Documentation can be generated with:
-
-```sh
-npm run doc
 ```
 
 The HTML files can then be found in the `lib/doc/` directory.
