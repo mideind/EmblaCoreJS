@@ -9,12 +9,12 @@ export default {
         {
             file: "lib/emblacore.js",
             name: "EmblaCore",
-            format: "umd",
+            format: "es",
         },
         {
             file: "lib/emblacore.min.js",
             name: "EmblaCore",
-            format: "umd",
+            format: "es",
             plugins: [terser()],
         },
     ],

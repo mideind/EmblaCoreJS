@@ -105,7 +105,7 @@ export class EmblaSessionConfig {
      * Called when the session has received
      * speech text from the server.
      */
-    onSpeechTextReceived?: (transcript: string, isFinal: boolean) => void;
+    onSpeechTextReceived?: (transcript: string, isFinal: boolean, msg: Object) => void;
     /**
      * Called when the session has received *final* speech text
      * from the server and is waiting for a query answer.
@@ -151,7 +151,7 @@ export class EmblaSessionConfig {
      * @async
      */
     async fetchToken(): Promise<void> {
-        if (!EmblaSessionConfig._token?.isExpired()) {
+        if (EmblaSessionConfig._token !== undefined && !EmblaSessionConfig._token.isExpired()) {
             console.debug("Token still valid, not fetching a new one");
             return;
         }

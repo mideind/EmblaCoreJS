@@ -18,9 +18,8 @@ const mediaRecorderConfig: RecordRTC.Options = {
     recorderType: RecordRTC.StereoAudioRecorder,
     mimeType: "audio/webm;codecs=pcm",
     disableLogs: true,
-    timeSlice: 100,
-    sampleRate: audioConstraints.sampleRate ? Number(audioConstraints.sampleRate) : undefined,
-    bufferSize: 4096,
+    timeSlice: 100, /* ms */
+    desiredSampRate: audioConstraints.sampleRate ? Number(audioConstraints.sampleRate) : undefined,
     numberOfAudioChannels: 1,
 };
 
@@ -50,7 +49,7 @@ export class AudioRecorder {
      * @param dataHandler Callback handler for handling audio input chunks.
      * @param errHandler Callback handler for handling errors during recording.
      */
-    static async start(dataHandler: (arg0: Blob) => void, errHandler: (arg0: string) => void): Promise<void> {
+    static async start(dataHandler: (data: Blob) => void, errHandler: (error: string) => void): Promise<void> {
         if (await this.isRecording()) {
             errHandler("Already recording.");
             return;

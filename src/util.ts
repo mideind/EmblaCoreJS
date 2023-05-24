@@ -33,3 +33,12 @@ export function asciify(s: string) {
     }
     return s;
 }
+
+/**
+ * Capitalize the first character of a string, leaving the rest unchanged.
+ * @param s String to capitalize first character of.
+ * @returns String with first character capitalized.
+ */
+export function capFirst(s: string): string {
+    return s[0].toUpperCase() + s.substring(1);
+}
