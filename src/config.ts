@@ -105,7 +105,7 @@ export class EmblaSessionConfig {
      * Called when the session has received
      * speech text from the server.
      */
-    onSpeechTextReceived?: (transcript: string, isFinal: boolean, msg: Object) => void;
+    onSpeechTextReceived?: (transcript: string, isFinal: boolean, msg: common.ASRResponseMessage) => void;
     /**
      * Called when the session has received *final* speech text
      * from the server and is waiting for a query answer.
@@ -115,7 +115,7 @@ export class EmblaSessionConfig {
      * Called when the session has received
      * a query answer from the server.
      */
-    onQueryAnswerReceived?: (answer: Map<string, any>) => void;
+    onQueryAnswerReceived?: (answer: common.QueryResponseData) => void;
     /**
      * Called when the session is playing the
      * answer as audio.

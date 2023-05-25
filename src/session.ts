@@ -1,4 +1,4 @@
-import { webSocketGoingAwayCode } from "common.js";
+import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage, webSocketGoingAwayCode } from "common.js";
 import { EmblaSessionConfig } from "config.js";
 import { AudioRecorder } from "recorder.js";
 import { AudioPlayer } from "audio.js";
@@ -211,13 +211,13 @@ export class EmblaSession {
         };
     }
 
-    private async _handleGreetingsMessage(_msg: Object) {
+    private async _handleGreetingsMessage(_msg: GreetingsResponseMessage) {
         if (this._config.onStartStreaming !== undefined) {
             this._config.onStartStreaming();
         }
     }
 
-    private async _handleASRResultMessage(msg: Object) {
+    private async _handleASRResultMessage(msg: ASRResponseMessage) {
         if (this.state !== EmblaSessionState.streaming) {
             throw new Error("Session is not streaming!");
         }
@@ -248,7 +248,7 @@ export class EmblaSession {
         }
     }
 
-    private async _handleQueryResultMessage(msg: Object) {
+    private async _handleQueryResultMessage(msg: QueryResponseMessage) {
         if (this.state !== EmblaSessionState.answering) {
             throw new Error("Session is not answering query!");
         }
@@ -256,18 +256,19 @@ export class EmblaSession {
         try {
             let data = msg.data;
             if (data == null ||
-                data["valid"] == false ||
-                data["audio"] == null ||
-                data["answer"] == null) {
+                data.valid == false ||
+                data.audio == null ||
+                data.answer == null) {
                 // Handle no answer scenario
                 console.log("Query result did not contain an answer, playing dunno answer");
-                let dunnoMsg = AudioPlayer.playDunno(this._config.voiceID, this.stop, this._config.voiceSpeed);
+                let dunnoMsg = await AudioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
+                await this.stop();
 
                 if (this._config.onQueryAnswerReceived != null) {
                     // This is a bit of a hack, but we need to pass
                     // the dunno message text to the callback function
                     // so that it can be displayed in the UI.
-                    data!["answer"] = dunnoMsg;
+                    data!.answer = dunnoMsg;
                     this._config.onQueryAnswerReceived!(data);
                 }
                 return;
@@ -279,17 +280,14 @@ export class EmblaSession {
             }
 
             // Play remote audio file
-            let audioURL = data["audio"];
-            AudioPlayer.playURL(audioURL, async (err) => {
-                if (err) {
-                    await this._error("Error playing audio at URL $audioURL");
-                    return;
-                }
-              // End session after audio answer has finished playing
-              await this.stop();
+            let audioURL = data.audio;
+            await AudioPlayer.playURL(audioURL).catch(async (err) => {
+                await this._error(`Error playing audio at URL ${audioURL}: ${err}`);
             });
+            // End session after audio answer has finished playing
+            await this.stop();
         } catch (e) {
-            await this._error("Error handling query result: $e");
+            await this._error(`Error handling query result: ${e}`);
             return;
         }
     }

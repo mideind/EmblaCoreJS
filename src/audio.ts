@@ -2,6 +2,7 @@
  * Class containing static methods for playing audio.
  */
 export class AudioPlayer {
+    // private _audioUrl = "https://embla.is/"
     /**
      * Initialize audio assets.
      * @async
@@ -40,6 +41,7 @@ export class AudioPlayer {
     }
     /**
      * Play a specific sound. Some sounds are dependent on TTS settings.
+     * @async
      * @param soundName Name of sound to play.
      * @param voiceId Selected TTS voice (if applicable).
      * @param playbackSpeed Selected TTS speed (if applicable).
@@ -51,17 +53,22 @@ export class AudioPlayer {
         console.log(playbackSpeed);
     }
     /**
-     * Play sound signifying that the query couldn't be answered.
+     * Play a random sound signifying that the query couldn't be answered.
      * @async
+     * @param voiceId Selected TTS voice (if applicable).
+     * @param playbackSpeed Selected TTS speed (if applicable).
+     * @returns The text that was read (for displaying in UI).
      */
-    static async playDunno() {
+    static async playDunno(voiceId: string, playbackSpeed: number): Promise<string> {
         // TODO
+        return "dunno";
     }
     /**
      * Play sound fetched from a URL.
      * @async
+     * @param audioUrl URL to audio file for playing.
      */
-    static async playURL() {
+    static async playURL(audioUrl: string) {
         // TODO
     }
     /**

@@ -33,3 +33,25 @@ export const supportedSpeechSynthesisVoices = [
     "Guðrún",
     "Gunnar",
 ];
+
+// Responses from the server
+interface ResponseMessage {
+    type: string,
+    code: number
+}
+export interface GreetingsResponseMessage extends ResponseMessage {
+    info: object
+}
+export interface ASRResponseMessage extends ResponseMessage {
+    transcript: string,
+    is_final: boolean,
+    alternatives?: [string]
+}
+export interface QueryResponseData {
+    valid: boolean,
+    answer?: string,
+    audio?: string
+}
+export interface QueryResponseMessage extends ResponseMessage {
+    data: QueryResponseData
+}
