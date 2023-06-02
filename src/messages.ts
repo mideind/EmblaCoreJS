@@ -1,5 +1,3 @@
-
-
 import { EmblaSessionConfig } from "./config.js";
 
 /** Options for the ASR service. */

@@ -10,7 +10,7 @@ Use yarn to install dependencies.
 yarn install
 ```
 
-To build and bundle the project run:
+To build the project run:
 
 ```sh
 npm run build

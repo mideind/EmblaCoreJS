@@ -1,36 +1,32 @@
 import * as dotenv from "dotenv";
 dotenv.config();
-import { assert, expect } from "chai";
-import { EmblaSpeechSynthesizer } from "../src/speech.js";
+import { EmblaSpeechSynthesizer } from "../src/speech";
 
-let _run_network_tests: boolean = function () {
+let it_net = function () {
     const nt = process.env["NETWORK_TESTS"];
-    return nt ? nt == "1" || nt.toLowerCase() == "true" : false;
+    if (nt === "1" || nt?.toLowerCase() == "true") {
+        return it;
+    }
+    else {
+        return it.skip
+    }
 }();
 
 describe("EmblaSpeechSynthesizer tests", function () {
     it("should have the correct interface", function () {
         // Static methods
-        expect(EmblaSpeechSynthesizer).to.have.property("synthesize");
-        expect(EmblaSpeechSynthesizer.synthesize).to.be.a("function");
+        expect(EmblaSpeechSynthesizer).toHaveProperty("synthesize");
+        expect(typeof EmblaSpeechSynthesizer.synthesize).toBe("function");
     })
-    it("should not speech synthesize text (incorrect api key)", async function () {
-        if (_run_network_tests) {
-            // If the NETWORK_TESTS env variable is set, run this test
-            const audio_url = await EmblaSpeechSynthesizer.synthesize("Þetta er prufutexti.", "an incorrect API key");
-            assert.equal(audio_url, null);
-        } else {
-            this.skip();
-        }
+    it_net("should not speech synthesize text (incorrect api key)", async function () {
+        // If the NETWORK_TESTS env variable is set, run this test
+        const audio_url = await EmblaSpeechSynthesizer.synthesize("Þetta er prufutexti.", "an incorrect API key");
+        expect(audio_url).toEqual(null);
     })
-    it("should speech synthesize text", async function () {
-        if (_run_network_tests) {
-            // If the NETWORK_TESTS env variable is set, run this test
-            const audio_url = await EmblaSpeechSynthesizer.synthesize("Þetta er prufutexti.", process.env["X_API_KEY"] ?? "");
-            assert.isString(audio_url);
-            assert.isTrue(audio_url!.startsWith("http"));
-        } else {
-            this.skip();
-        }
+    it_net("should speech synthesize text", async function () {
+        // If the NETWORK_TESTS env variable is set, run this test
+        const audio_url = await EmblaSpeechSynthesizer.synthesize("Þetta er prufutexti.", process.env["X_API_KEY"] ?? "");
+        expect(audio_url).toBeInstanceOf("string");
+        expect(audio_url!.startsWith("http")).toBeTruthy();
     })
 });

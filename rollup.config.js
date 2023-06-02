@@ -19,11 +19,11 @@ export default {
         },
     ],
     plugins: [
+        typescript(),
         json(),
         nodeResolve({
             browser: true,
             include: "node_modules/recordrtc/RecordRTC.min.js",
         }),
-        typescript(),
     ],
 };

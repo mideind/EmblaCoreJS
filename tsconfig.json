@@ -1,12 +1,12 @@
 {
-  "include": ["./src/**/*", "test/util.spec.ts"],
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "target": "ES6",
-    "module": "ESNext",
-    "outDir": "./lib/",
+    // "target": "ES6",
+    // "module": "ESNext",
+    // "outDir": "./lib/",
     "baseUrl": "./src/",
-    "declaration": true,
+    // "declaration": true,
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "lib": ["ES2021", "DOM"],

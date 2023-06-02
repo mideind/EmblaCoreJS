@@ -1,9 +1,8 @@
-import { assert } from "chai";
-import { asciify } from "../src/util.js";
+import { asciify } from "../src/util";
 
 describe("Util tests", () => {
-    it("asciify should turn Guðrún into Gudrun", () => {
+    test("asciify should turn Guðrún into Gudrun", () => {
         const result = asciify("Guðrún");
-        assert.equal(result, "Gudrun");
+        expect(result).toEqual("Gudrun");
     });
 });

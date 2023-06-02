@@ -1,9 +1,9 @@
-import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage, WAVHeaderLength, webSocketGoingAwayCode } from "common.js";
-import { EmblaSessionConfig } from "config.js";
-import { AudioRecorder } from "recorder.js";
-import { AudioPlayer } from "audio.js";
-import { GreetingsOutputMessage } from "messages.js";
-import { capFirst } from "util.js";
+import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage, WAVHeaderLength } from "./common.js";
+import { EmblaSessionConfig } from "./config.js";
+import { AudioRecorder } from "./recorder.js";
+import { AudioPlayer } from "./audio.js";
+import { GreetingsOutputMessage } from "./messages.js";
+import { capFirst } from "./util.js";
 
 /**
  * Session state.
@@ -124,7 +124,7 @@ export class EmblaSession {
         AudioPlayer.stop();
         // Close WebSocket connection
         if (this._channel !== undefined) {
-            this._channel.close(webSocketGoingAwayCode);
+            this._channel.close();
         }
     }
 

@@ -1,4 +1,4 @@
-import pkg from "../package.json" assert { type: "json" };
+import pkg from "../package.json";
 
 // Software
 export const SOFTWARE_NAME = pkg.name;
@@ -24,7 +24,6 @@ export const defaultQueryServer = "https://greynir.is";
 
 export const requestTimeout = 10e3; // 10 seconds in milliseconds
 
-export const webSocketGoingAwayCode = 1001;
 export const WAVHeaderLength = 44;
 
 // Speech synthesis

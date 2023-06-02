@@ -1,6 +1,6 @@
 
 import * as common from "./common.js";
-import { TTSOptions } from "messages.js";
+import { TTSOptions } from "./messages.js";
 
 interface TTSInput extends TTSOptions {
     apiURL: string | undefined

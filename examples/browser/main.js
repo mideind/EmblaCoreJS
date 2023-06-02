@@ -35,12 +35,12 @@ function setupConfig() {
     console.log(config);
 }
 
-var buttonTicker = null;
 var session;
 async function toggle_start() {
     if (
         session === undefined ||
-        session.state === EmblaCore.EmblaSessionState.idle
+        session.state === EmblaCore.EmblaSessionState.idle ||
+        session.state === EmblaCore.EmblaSessionState.done
     ) {
         log("Starting session...");
         // Ensure config API key is in sync with text input
@@ -51,15 +51,6 @@ async function toggle_start() {
         log("Cancelling session...");
         await session.stop();
         session = undefined;
-    }
-    if (buttonTicker === null) {
-        // Start ticker to update button every 250 ms
-        buttonTicker = setInterval(updateButton, 250);
-    } else {
-        // Stop updating button after 300 ms
-        setTimeout(() => {
-            clearInterval(buttonTicker);
-        }, 300);
     }
 }
 
@@ -85,6 +76,9 @@ urlInput.addEventListener("change", (event) => {
 button.addEventListener("click", (_) => {
     toggle_start();
 });
+
+// Start ticker to update button every 250 ms
+var buttonTicker = setInterval(updateButton, 250);
 
 // Set up callback handlers in config instance
 setupConfig();
