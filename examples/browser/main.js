@@ -24,18 +24,13 @@ function setupConfig() {
         log("Started streaming!");
     };
     config.onSpeechTextReceived = (transcript, isFinal, data) => {
-        log("Received text.");
-        log(transcript);
-        log(isFinal);
-        log(data);
+        log(`Received text. ${transcript}, isFinal: ${isFinal}`);
     };
-    config.onQueryAnswerReceived = (answer) => {
-        log("Got query answer!");
-        log(answer);
+    config.onQueryAnswerReceived = (qanswer) => {
+        log(`Got query answer: ${qanswer.answer}`);
     };
     config.onError = (error) => {
-        log("ERROR:");
-        log(error);
+        log(`ERROR: ${error}`);
     };
     console.log(config);
 }

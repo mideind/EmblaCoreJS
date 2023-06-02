@@ -61,6 +61,8 @@ export class AudioPlayer {
      */
     static async playDunno(voiceId: string, playbackSpeed: number): Promise<string> {
         // TODO
+        console.log(voiceId);
+        console.log(playbackSpeed);
         return "dunno";
     }
     /**
@@ -70,11 +72,13 @@ export class AudioPlayer {
      */
     static async playURL(audioUrl: string) {
         // TODO
+        console.log(audioUrl);
     }
     /**
      * Stop playing sounds.
      */
     static stop() {
         // TODO
+        console.log("stopping audio player");
     }
 }

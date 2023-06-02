@@ -25,6 +25,7 @@ export const defaultQueryServer = "https://greynir.is";
 export const requestTimeout = 10e3; // 10 seconds in milliseconds
 
 export const webSocketGoingAwayCode = 1001;
+export const WAVHeaderLength = 44;
 
 // Speech synthesis
 export const defaultSpeechSynthesisSpeed = 1.0;
@@ -45,7 +46,7 @@ export interface GreetingsResponseMessage extends ResponseMessage {
 export interface ASRResponseMessage extends ResponseMessage {
     transcript: string,
     is_final: boolean,
-    alternatives?: [string]
+    alternatives: [string]
 }
 export interface QueryResponseData {
     valid: boolean,

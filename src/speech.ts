@@ -26,7 +26,7 @@ export class EmblaSpeechSynthesizer {
                 "voice_speed": ttsOptions?.voice_speed?.toString() ?? common.defaultSpeechSynthesisSpeed.toString(),
             }
         };
-        let apiURL = (ttsOptions?.apiURL) ? ttsOptions.apiURL : `${common.defaultServer}${common.speechSynthesisEndpoint}`;
+        const apiURL = (ttsOptions?.apiURL) ? ttsOptions.apiURL : `${common.defaultServer}${common.speechSynthesisEndpoint}`;
 
         let response: Response | null;
         try {
@@ -48,7 +48,7 @@ export class EmblaSpeechSynthesizer {
             }
             // Parse JSON body and return audio URL
             const body = await response.json();
-            return body["audio_url"];
+            return body.audio_url;
         } catch (e) {
             // NOTE: the following cast is unsafe,
             // JS can raise other things than Errors

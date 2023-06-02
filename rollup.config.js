@@ -18,5 +18,12 @@ export default {
             plugins: [terser()],
         },
     ],
-    plugins: [json(), nodeResolve({ browser: true }), typescript()],
+    plugins: [
+        json(),
+        nodeResolve({
+            browser: true,
+            include: "node_modules/recordrtc/RecordRTC.min.js",
+        }),
+        typescript(),
+    ],
 };

@@ -1,3 +1,4 @@
+// @ts-ignore // Ignore missing spec file for RecordRTC
 import RecordRTC = require("recordrtc"); // This is a CommonJS library, not an ES6 module
 import { audioBitRate, audioNumChannels, audioSampleRate } from "./common.js";
 
@@ -13,14 +14,15 @@ const audioConstraints: MediaTrackConstraints = {
 }
 const mediaConstraints: MediaStreamConstraints = { audio: audioConstraints };
 // RecorderRTC configuration
-const mediaRecorderConfig: RecordRTC.Options = {
+const mediaRecorderConfig = {
     type: "audio",
     recorderType: RecordRTC.StereoAudioRecorder,
-    mimeType: "audio/webm;codecs=pcm",
+    mimeType: "audio/pcm",
+    desiredSampRate: audioConstraints.sampleRate ? Number(audioConstraints.sampleRate) : undefined,
     disableLogs: true,
     timeSlice: 100, /* ms */
-    desiredSampRate: audioConstraints.sampleRate ? Number(audioConstraints.sampleRate) : undefined,
     numberOfAudioChannels: 1,
+    ondataavailable: undefined as any, /* Hack so tsc doesn't complain */
 };
 
 /**

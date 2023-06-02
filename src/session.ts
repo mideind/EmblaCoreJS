@@ -1,4 +1,4 @@
-import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage, webSocketGoingAwayCode } from "common.js";
+import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage, WAVHeaderLength, webSocketGoingAwayCode } from "common.js";
 import { EmblaSessionConfig } from "config.js";
 import { AudioRecorder } from "recorder.js";
 import { AudioPlayer } from "audio.js";
@@ -123,7 +123,9 @@ export class EmblaSession {
 
         AudioPlayer.stop();
         // Close WebSocket connection
-        this._channel?.close(webSocketGoingAwayCode);
+        if (this._channel !== undefined) {
+            this._channel.close(webSocketGoingAwayCode);
+        }
     }
 
     private async _error(errMsg: string) {
@@ -165,7 +167,7 @@ export class EmblaSession {
             this._channel.onmessage = this._createOnMessageHandler();
 
         } catch (err) {
-            await this._error(`Error connecting to server: ${err}`);
+            await this._error(`Error communicating with server: ${err}`);
         }
     }
 
@@ -174,9 +176,10 @@ export class EmblaSession {
         await AudioRecorder.start(
             (data: Blob) => {
                 console.log("sending blob: ", data);
-                this._channel!.send(data);
+                // Skip WAV header (RecordRTC prepends a WAV header to each blob)
+                this._channel!.send(data.slice(WAVHeaderLength));
             },
-            async (error) => {
+            async (error: string) => {
                 await this._error(error);
             }
         );
@@ -189,24 +192,29 @@ export class EmblaSession {
      */
     private _createOnMessageHandler() {
         return async (ev: MessageEvent<any>) => {
-            let msg = JSON.parse(ev.data);
-            switch (msg.type) {
-                case "greetings":
-                    await this._handleGreetingsMessage(msg);
-                    break;
-                case "asr_result":
-                    await this._handleASRResultMessage(msg);
-                    break;
-                case "query_result":
-                    await this._handleQueryResultMessage(msg);
-                    break;
-                case "error":
-                    if (msg.name === "timeout_error") {
-                        await this.cancel();
-                    }
-                    throw new Error(msg.message);
-                default:
-                    throw new Error(`Invalid message type: ${msg.type}`);
+            try {
+                const msg = JSON.parse(ev.data);
+                switch (msg.type) {
+                    case "greetings":
+                        await this._handleGreetingsMessage(msg);
+                        break;
+                    case "asr_result":
+                        await this._handleASRResultMessage(msg);
+                        break;
+                    case "query_result":
+                        await this._handleQueryResultMessage(msg);
+                        break;
+                    case "error":
+                        if (msg.name === "timeout_error") {
+                            await this.cancel();
+                            return;
+                        }
+                        throw new Error(msg.message);
+                    default:
+                        throw new Error(`Invalid message type: ${msg.type}`);
+                }
+            } catch (err) {
+                await this._error(`Error handling message: ${err}`);
             }
         };
     }
@@ -222,8 +230,8 @@ export class EmblaSession {
             throw new Error("Session is not streaming!");
         }
 
-        let transcript: string = capFirst(msg.transcript);
-        let isFinal: boolean = msg.is_final;
+        const transcript: string = capFirst(msg.transcript);
+        const isFinal: boolean = msg.is_final;
 
         if (isFinal) {
             await AudioRecorder.stop();
@@ -254,36 +262,39 @@ export class EmblaSession {
         }
 
         try {
-            let data = msg.data;
-            if (data == null ||
-                data.valid == false ||
-                data.audio == null ||
-                data.answer == null) {
+            const data = msg.data;
+            if (data === undefined ||
+                data === null ||
+                data.valid === false ||
+                data.audio === null ||
+                data.answer === null) {
                 // Handle no answer scenario
                 console.log("Query result did not contain an answer, playing dunno answer");
-                let dunnoMsg = await AudioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
+                const dunnoMsg = await AudioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
                 await this.stop();
 
-                if (this._config.onQueryAnswerReceived != null) {
+                if (this._config.onQueryAnswerReceived !== undefined) {
                     // This is a bit of a hack, but we need to pass
                     // the dunno message text to the callback function
                     // so that it can be displayed in the UI.
                     data!.answer = dunnoMsg;
-                    this._config.onQueryAnswerReceived!(data);
+                    this._config.onQueryAnswerReceived(data);
                 }
                 return;
             }
 
             // OK, we got an answer, notify via handler
-            if (this._config.onQueryAnswerReceived != null) {
-                this._config.onQueryAnswerReceived!(data);
+            if (this._config.onQueryAnswerReceived !== undefined) {
+                this._config.onQueryAnswerReceived(data);
             }
 
             // Play remote audio file
-            let audioURL = data.audio;
-            await AudioPlayer.playURL(audioURL).catch(async (err) => {
-                await this._error(`Error playing audio at URL ${audioURL}: ${err}`);
-            });
+            const audioURL = data.audio;
+            if (audioURL) {
+                await AudioPlayer.playURL(audioURL).catch(async (err) => {
+                    await this._error(`Error playing audio at URL ${audioURL}: ${err}`);
+                });
+            }
             // End session after audio answer has finished playing
             await this.stop();
         } catch (e) {
