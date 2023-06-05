@@ -5,7 +5,7 @@
 
 # EmblaCoreJS
 
-EmblaCore is a TypeScript/JavaScipt library containing the core session functionality in Embla, a cross-platform mobile Icelandic-language voice assistant client.
+EmblaCore is a TypeScript/JavaScript library containing the core session functionality in Embla, a cross-platform mobile Icelandic-language voice assistant client.
 
 ## Installation
 
