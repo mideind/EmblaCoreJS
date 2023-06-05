@@ -178,13 +178,10 @@ export class EmblaSessionConfig {
         // have has expired, so we fetch a new one.
         const timeout = 5e3; // milliseconds
         try {
-            const key: string = this.apiKey ?? "";
-            console.debug(`Fetching token from ${this._tokenURL} (X-API-Key: ${key})`);
-
             const response = await fetch(
                 new URL(this._tokenURL),
                 {
-                    headers: { "X-API-Key": key },
+                    headers: { "X-API-Key": this.apiKey ?? "" },
                     signal: AbortSignal.timeout(timeout)
                 }
             );

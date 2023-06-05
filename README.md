@@ -51,7 +51,7 @@ python3 -m http.server --bind 127.0.0.1 8000
 ```
 
 Open the following URL in the browser: [`http://localhost:8000/client.html`](http://localhost:8000/client.html ).
-Note that running the example requires an API key for the server EmblaCore is configured to communicate with (modify the `API_KEY` constant in `client.html`).
+Note that running the example requires an API key for the server EmblaCore is configured to communicate with.
 
 ## License
 

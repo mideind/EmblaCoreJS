@@ -21,27 +21,51 @@ var config = new EmblaCore.EmblaSessionConfig(urlInput.value);
 /** Set handler functions and API key for the current config. */
 function setupConfig() {
     config.onStartStreaming = () => {
-        log("Started streaming!");
+        log("[ASR] Started streaming audio...");
     };
     config.onSpeechTextReceived = (transcript, isFinal, data) => {
-        log(`Received text. ${transcript}, isFinal: ${isFinal}`);
+        log(
+            `[ASR] Transcript: '${transcript}', isFinal: ${isFinal}, alternatives: ${data.alternatives}`
+        );
+    };
+    config.onStartQuerying = () => {
+        log("[ASR] Stopped streaming audio.");
+        log("[QUERY] Sending query...");
     };
     config.onQueryAnswerReceived = (qanswer) => {
-        log(`Got query answer: ${qanswer.answer}`);
+        log(`[QUERY] Got query answer: ${qanswer.answer}`);
+    };
+    config.onStartAnswering = () => {
+        log("[TTS] Reading answer...");
+    };
+    config.onDone = () => {
+        log("Session finished.");
+        updateButton();
     };
     config.onError = (error) => {
         log(`ERROR: ${error}`);
+        updateButton();
     };
     console.log(config);
 }
 
 var session;
-async function toggle_start() {
-    if (
+function sessionIsActive() {
+    return (
         session === undefined ||
         session.state === EmblaCore.EmblaSessionState.idle ||
         session.state === EmblaCore.EmblaSessionState.done
-    ) {
+    );
+}
+function updateButton() {
+    if (sessionIsActive()) {
+        button.value = "Stream microphone";
+    } else {
+        button.value = "Stop session";
+    }
+}
+async function toggle_start() {
+    if (sessionIsActive()) {
         log("Starting session...");
         // Ensure config API key is in sync with text input
         config.apiKey = apiKeyInput.value;
@@ -49,21 +73,10 @@ async function toggle_start() {
         await session.start();
     } else {
         log("Cancelling session...");
-        await session.stop();
+        await session.cancel();
         session = undefined;
     }
-}
-
-function updateButton() {
-    if (
-        session === undefined ||
-        session.state === EmblaCore.EmblaSessionState.idle ||
-        session.state === EmblaCore.EmblaSessionState.done
-    ) {
-        button.value = "Stream microphone";
-    } else {
-        button.value = "Stop session";
-    }
+    updateButton();
 }
 
 // Add change event listener to url input
@@ -76,9 +89,6 @@ urlInput.addEventListener("change", (event) => {
 button.addEventListener("click", (_) => {
     toggle_start();
 });
-
-// Start ticker to update button every 250 ms
-var buttonTicker = setInterval(updateButton, 250);
 
 // Set up callback handlers in config instance
 setupConfig();

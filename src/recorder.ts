@@ -18,7 +18,7 @@
  */
 
 // @ts-ignore // Ignore missing spec file for RecordRTC
-import RecordRTC = require("recordrtc"); // This is a CommonJS library, not an ES6 module
+import RecordRTC from "recordrtc"; // This is a CommonJS library, not an ES6 module
 import { audioBitRate, audioNumChannels, audioSampleRate } from "./common.js";
 
 const audioConstraints: MediaTrackConstraints = {
