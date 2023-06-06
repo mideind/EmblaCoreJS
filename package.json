@@ -12,7 +12,7 @@
   "scripts": {
     "build": "rollup --config",
     "lint": "tslint --project tsconfig.json",
-    "doc": "npm run build && rimraf ./lib/doc && jsdoc ./lib/emblacore.js -d ./lib/doc -R ./README.md -P ./package.json",
+    "doc": "yarn run build && rimraf ./lib/doc && jsdoc ./lib/emblacore.js -d ./lib/doc -R ./README.md -P ./package.json",
     "test": "jest"
   },
   "directories": {
