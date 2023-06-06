@@ -1,15 +1,17 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Language](https://img.shields.io/badge/language-javascript-yellow)]()
 
-<img src="https://github.com/mideind/EmblaCoreFlutter/raw/master/img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
+<img src="./img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
 
 # EmblaCoreJS
 
-EmblaCore is a TypeScript/JavaScript library containing the core session functionality in Embla, a cross-platform mobile Icelandic-language voice assistant client.
+EmblaCoreJS is a TypeScript/JavaScript library containing the core session functionality in [Embla](https://github.com/mideind/EmblaFlutterApp), a cross-platform mobile Icelandic-language voice assistant client.
 
-## Installation
+For the Dart/Flutter library see [EmblaCoreFlutter](https://github.com/mideind/EmblaCoreFlutter).
 
-Use yarn to install dependencies.
+## Local Installation
+
+Use [yarn](https://yarnpkg.com) to install dependencies.
 
 ```bash
 yarn install
@@ -53,14 +55,41 @@ To test the library in a browser environment navigate to the `examples/browser/`
 python3 -m http.server --bind 127.0.0.1 8000
 ```
 
-Open the following URL in the browser: [`http://localhost:8000/client.html`](http://localhost:8000/client.html ).
-Note that running the example requires an API key for the server EmblaCore is configured to communicate with.
+Open the following URL in the browser: [`http://localhost:8000/client.html`](http://localhost:8000/client.html).
+Note that running the example may require an API key for the server EmblaCoreJS is configured to communicate with.
 
 ## License
 
-EmblaCore is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
+EmblaCoreJS uses [RecordRTC](http://recordrtc.org/), which is Copyright &copy; [Muaz Khan](https://github.com/muaz-khan).
 
-<a href="https://mideind.is"><img src="https://github.com/mideind/EmblaCoreFlutter/raw/master/img/mideind_logo.png" alt="Miðeind ehf."
+The following is the license for RecordRTC:
+
+The MIT License (MIT)
+
+Copyright (c) 2013-2020 [Muaz Khan](https://github.com/muaz-khan)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+EmblaCoreJS is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
+
+<a href="https://mideind.is"><img src="./img/mideind_logo.png" alt="Miðeind ehf."
 width="214" height="66" align="right" style="margin-left:20px; margin-bottom: 20px;"></a>
 
 This set of programs is free software: you can redistribute it and/or modify it
