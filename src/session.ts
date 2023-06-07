@@ -133,10 +133,9 @@ export class EmblaSession {
     }
 
     private async _stop() {
-        // Terminate all audio recording and playback
+        // Terminate audio recording
         await AudioRecorder.stop();
 
-        AudioPlayer.stop();
         // Close WebSocket connection
         if (this._channel !== undefined) {
             this._channel.close();
@@ -199,7 +198,7 @@ export class EmblaSession {
             }
         );
         if (this._config.audio) {
-            await AudioPlayer.playSessionStart();
+            AudioPlayer.playSessionStart();
         }
     }
 
@@ -256,7 +255,7 @@ export class EmblaSession {
             if (this._config.query) {
                 this.state = EmblaSessionState.answering;
                 if (this._config.audio) {
-                    await AudioPlayer.playSessionConfirm();
+                    AudioPlayer.playSessionConfirm();
                 }
             }
         }
@@ -290,7 +289,7 @@ export class EmblaSession {
                 data.answer === undefined) {
                 // Handle no answer scenario
                 console.log("Query result did not contain an answer, playing dunno answer");
-                const dunnoMsg = await AudioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
+                const dunnoMsg = AudioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
                 await this.stop();
 
                 if (this._config.onQueryAnswerReceived !== undefined) {
@@ -313,14 +312,13 @@ export class EmblaSession {
             console.log(audioURL);
             if (audioURL !== undefined && audioURL !== "") {
                 try {
-                    await AudioPlayer.playURL(audioURL).then(async () => { await this.stop(); console.log("stopping") });
+                    AudioPlayer.playURL(audioURL);
                 } catch (err) {
                     await this._error(`Error playing audio at URL ${audioURL}: ${err}`);
                 }
-            } else {
-                // End session after audio answer has finished playing
-                await this.stop();
             }
+            // End session after audio answer has finished playing
+            await this.stop();
         } catch (e) {
             await this._error(`Error handling query result: ${e}`);
             return;

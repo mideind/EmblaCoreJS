@@ -17,152 +17,173 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { defaultSpeechSynthesisVoice } from "common.js";
+import { asciify } from "util.js";
+
 /**
  * Class containing static methods for playing audio.
  */
 export class AudioPlayer {
     private static _currAudio?: HTMLAudioElement;
+    private static _audioQueue: Array<HTMLAudioElement> = [];
     private static _fileExtension = "mp3";
     // private static _audioFiles = {};
-    private static _audioUrl = "https://embla.is/assets/audio";
+    private static _audioURL = "https://embla.is/assets/audio";
 
     /**
      * Pre-fetch audio assets.
      * @async
      */
     static async init() {
-        const fileNames = [
-            "conn-gudrun",
-            "conn-gunnar",
-            "dunno01-gudrun",
-            "dunno01-gunnar",
-            "dunno02-gudrun",
-            "dunno02-gunnar",
-            "dunno03-gudrun",
-            "dunno03-gunnar",
-            "dunno04-gudrun",
-            "dunno04-gunnar",
-            "dunno05-gudrun",
-            "dunno05-gunnar",
-            "dunno06-gudrun",
-            "dunno06-gunnar",
-            "dunno07-gudrun",
-            "dunno07-gunnar",
-            "err-gudrun",
-            "err-gunnar",
-            "mynameis-gudrun",
-            "mynameis-gunnar",
-            "nomic-gudrun",
-            "nomic-gunnar",
-            "rec_begin",
-            "rec_cancel",
-            "rec_confirm",
-            "voicespeed-gudrun",
-            "voicespeed-gunnar"
-        ];
-        console.log(`audio fileNames: ${fileNames}`);
+        // const fileNames = [
+        //     "conn-gudrun",
+        //     "conn-gunnar",
+        //     "dunno01-gudrun",
+        //     "dunno01-gunnar",
+        //     "dunno02-gudrun",
+        //     "dunno02-gunnar",
+        //     "dunno03-gudrun",
+        //     "dunno03-gunnar",
+        //     "dunno04-gudrun",
+        //     "dunno04-gunnar",
+        //     "dunno05-gudrun",
+        //     "dunno05-gunnar",
+        //     "dunno06-gudrun",
+        //     "dunno06-gunnar",
+        //     "dunno07-gudrun",
+        //     "dunno07-gunnar",
+        //     "err-gudrun",
+        //     "err-gunnar",
+        //     "mynameis-gudrun",
+        //     "mynameis-gunnar",
+        //     "nomic-gudrun",
+        //     "nomic-gunnar",
+        //     "rec_begin",
+        //     "rec_cancel",
+        //     "rec_confirm",
+        //     "voicespeed-gudrun",
+        //     "voicespeed-gunnar"
+        // ];
+        // console.log(`audio fileNames: ${fileNames}`);
     }
 
     /**
      * Play sound signifying session start.
-     * @async
      */
-    static async playSessionStart() {
-        this._currAudio = new Audio(`${this._audioUrl}/rec_begin.${this._fileExtension}`);
-        await this._playAudio(this._currAudio);
+    static playSessionStart() {
+        this.playSound("rec_begin");
     }
 
     /**
      * Play sound signifying session confirmation.
-     * @async
      */
-    static async playSessionConfirm() {
-        this._currAudio = new Audio(`${this._audioUrl}/rec_confirm.${this._fileExtension}`);
-        await this._playAudio(this._currAudio);
+    static playSessionConfirm() {
+        this.playSound("rec_confirm");
     }
 
     /**
      * Play sound signifying session cancellation.
-     * @async
+     * Stops any currently playing sounds.
      */
-    static async playSessionCancel() {
-        this._currAudio = new Audio(`${this._audioUrl}/rec_cancel.${this._fileExtension}`);
-        await this._playAudio(this._currAudio);
+    static playSessionCancel() {
+        this.stop();
+        this.playSound("rec_cancel");
     }
 
     /**
      * Play sound signifying no microphone permissions.
-     * @async
+     * @param voiceId Selected TTS voice.
+     * @param playbackSpeed Selected TTS speed.
      */
-    static async playNoMic(voiceId?: string) {
-        this._currAudio = new Audio(`${this._audioUrl}/nomic-${voiceId ?? "gudrun"}.${this._fileExtension}`);
-        await this._playAudio(this._currAudio);
-    }
-
-    /**
-     * Play a specific sound. Some sounds are dependent on TTS settings.
-     * @async
-     * @param soundName Name of sound to play.
-     * @param voiceId Selected TTS voice (if applicable).
-     * @param playbackSpeed Selected TTS speed (if applicable). Defaults to 1.
-     */
-    static async playSound(soundName: string, voiceId?: string, playbackSpeed: number = 1) {
-        this._currAudio = new Audio(`${this._audioUrl}/${soundName}-${voiceId}.${this._fileExtension}`);
-        await this._playAudio(this._currAudio, playbackSpeed);
+    static playNoMic(voiceId?: string, playbackSpeed?: number) {
+        this.playSound("nomic", voiceId ?? defaultSpeechSynthesisVoice, playbackSpeed);
     }
 
     /**
      * Play a random sound signifying that the query couldn't be answered.
-     * @async
      * @param voiceId Selected TTS voice.
-     * @param playbackSpeed Selected TTS speed. Defaults to 1.
+     * @param playbackSpeed Selected TTS speed.
      * @returns The text that was read (for displaying in UI).
      */
-    static async playDunno(voiceId: string, playbackSpeed: number = 1): Promise<string> {
-        // TODO
-        console.log(voiceId);
-        console.log(playbackSpeed);
-        return "dunno";
+    static playDunno(voiceId: string, playbackSpeed?: number): string {
+        const dunnoStrings: { [key: string]: string } = {
+            "dunno01": "Ég get ekki svarað því.",
+            "dunno02": "Ég get því miður ekki svarað því.",
+            "dunno03": "Ég kann ekki svar við því.",
+            "dunno04": "Ég skil ekki þessa fyrirspurn.",
+            "dunno05": "Ég veit það ekki.",
+            "dunno06": "Því miður skildi ég þetta ekki.",
+            "dunno07": "Því miður veit ég það ekki.",
+        };
+        const keys = Object.keys(dunnoStrings);
+        const randomKey = keys[keys.length * Math.random() << 0];
+        this.playSound(randomKey, voiceId, playbackSpeed);
+        return dunnoStrings[randomKey];
+    }
+
+    /**
+     * Play a specific sound. Some sounds are dependent on TTS settings.
+     * @param soundName Name of sound to play.
+     * @param voiceId Selected TTS voice (if applicable).
+     * @param playbackSpeed Selected TTS speed.
+     */
+    static playSound(soundName: string, voiceId?: string, playbackSpeed?: number) {
+        let url = `${this._audioURL}/${soundName}`;
+        if (voiceId !== undefined) {
+            // If TTS voice is specified, asciify and lowercase before adding to URL
+            url += `-${asciify(voiceId.toLowerCase())}`
+        }
+        url += `.${this._fileExtension}`;
+        this.playURL(url, playbackSpeed);
     }
 
     /**
      * Play sound fetched from a URL.
-     * @async
-     * @param audioUrl URL to audio file for playing.
+     * @param audioURL URL to audio file for playing.
+     * @param playbackSpeed Playback speed/rate.
      */
-    static async playURL(audioUrl: string) {
-        this._currAudio = new Audio(audioUrl);
-        return await this._playAudio(this._currAudio);
+    static playURL(audioURL: string, playbackSpeed?: number) {
+        this._playAudio(audioURL, playbackSpeed);
     }
 
     /**
-     * Stop playing sounds.
+     * Stop playing sound.
      */
     static stop() {
-        console.log("STOPPING AUDIO: ", this._currAudio, "ended? ", this._currAudio?.ended);
         if (this._currAudio !== undefined) {
             this._currAudio.pause();
         }
         this._currAudio = undefined;
+        this._audioQueue = [];
     }
 
     /**
-     * Play HTMLAudioElement and wait for it to finish (or is paused).
-     * @param audio HTMLAudioElement to play.
+     * Play HTMLAudioElement and wait for it to finish (or be paused).
+     * @param audioURL URL to audio file for playing.
      * @param playbackSpeed Playback speed/rate, default is 1.
      */
-    private static _playAudio(audio: HTMLAudioElement, playbackSpeed: number = 1) {
-        return new Promise((resolve) => {
-            // Promise resolves when any of the following events fire
-            audio.onended = resolve;
-            audio.onpause = resolve;
-            // audio.onabort = resolve;
-            // audio.oncancel = resolve;
-            // audio.onsuspend = resolve;
-            // audio.onclose = resolve;
+    private static _playAudio(audioURL: string, playbackSpeed?: number) {
+        let audio = new Audio(audioURL);
+        audio.playbackRate = playbackSpeed ?? 1;
+        this._audioQueue.push(audio);
 
-            audio.playbackRate = playbackSpeed;
-            audio.play();
-        });
+        this._playAudioQueue();
+    }
+
+    private static _playAudioQueue() {
+        if (this._currAudio === undefined) {
+            // If we aren't already playing audio, get the next audio element from queue
+            this._currAudio = this._audioQueue.shift();
+            if (this._currAudio !== undefined) {
+                // Found an audio element in the queue, start playing and
+                // play the next audio in queue when this audio element finishes
+                this._currAudio.onended = () => {
+                    // Remove current audio to signify we aren't playing audio
+                    this._currAudio = undefined;
+                    this._playAudioQueue();
+                };
+                this._currAudio.play();
+            }
+        }
     }
 }

@@ -60,34 +60,7 @@ Note that running the example may require an API key for the server EmblaCoreJS 
 
 ## License
 
-EmblaCoreJS uses [RecordRTC](http://recordrtc.org/), which is Copyright &copy; [Muaz Khan](https://github.com/muaz-khan).
-
-The following is the license for RecordRTC:
-
-The MIT License (MIT)
-
-Copyright (c) 2013-2020 [Muaz Khan](https://github.com/muaz-khan)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----
-
-EmblaCoreJS is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
+EmblaCore is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
 
 <a href="https://mideind.is"><img src="./img/mideind_logo.png" alt="Miðeind ehf."
 width="214" height="66" align="right" style="margin-left:20px; margin-bottom: 20px;"></a>
@@ -102,7 +75,7 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FO
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 The full text of the GNU General Public License v3 is
-[included here](https://github.com/mideind/Greynir/blob/master/LICENSE.txt)
+[included here](./LICENSE.txt)
 and also available here:
 [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/licenses/gpl-3.0.html).
 
@@ -111,3 +84,7 @@ GNU GPLv3 license, please contact us at [mideind@mideind.is](mailto:mideind@mide
 to negotiate a custom license. This applies for instance if you want to include or use
 this software, in part or in full, in other software that is not licensed under
 GNU GPLv3 or other compatible licenses.
+
+## Attributions
+
+EmblaCoreJS uses [RecordRTC](http://recordrtc.org/), which is Copyright &copy; [Muaz Khan](https://github.com/muaz-khan).
