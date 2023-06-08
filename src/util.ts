@@ -19,7 +19,7 @@
 
 /**
  * ASCII-fy a string, turning Icelandic characters into ASCII.
- * @param s String to ASCII-fy.
+ * @param {string} s String to ASCII-fy.
  * @returns ASCII-fied string with no special Icelandic characters
  * specific to Icelandic.
  */
@@ -54,7 +54,7 @@ export function asciify(s: string) {
 
 /**
  * Capitalize the first character of a string, leaving the rest unchanged.
- * @param s String to capitalize first character of.
+ * @param {string} s String to capitalize first character of.
  * @returns String with first character capitalized.
  */
 export function capFirst(s: string): string {

@@ -21,15 +21,21 @@ import * as common from "./common.js";
 import * as token from "./token.js";
 
 /**
- * EmblaSession configuration object.
+ * @summary EmblaSession configuration object.
+ * @remarks
+ * Configuration object which handles fetching authentication tokens
+ * and all settings which are sent to the server.
  */
 export class EmblaSessionConfig {
-
+    /**
+     * Authentication token for WebSocket communication.
+     * @internal
+     */
     private static _token?: token.AuthenticationToken;
 
     /**
      * Create an EmblaSessionConfig instance.
-     * @param server Server to communicate with. Default is {@link common.defaultServer}.
+     * @param {string} server Optional, server for session to communicate with.
      */
     constructor(server: string = common.defaultServer) {
         console.debug("Creating EmblaSessionConfig object");
@@ -47,15 +53,20 @@ export class EmblaSessionConfig {
     }
 
     /**
-     * URL to API that provides authentication
-     * token for WebSocket communication.
+     * API endpoint URL which provides authentication tokens.
+     * @internal
      */
     private _tokenURL: string;
     /**
      * WebSocket URL for the Ratatoskur ASR + Query + TTS pipeline.
+     * Created from the server URL passed into the constructor.
+     * @readonly
+     * @internal
      */
     socketURL: string;
-    /** Server API key. */
+    /**
+     * Server API key. _This is required for the default server._
+     */
     apiKey?: string;
     /**
      * Speech-to-text language (e.g. `is-IS`).
@@ -66,15 +77,15 @@ export class EmblaSessionConfig {
     engine?: string;
     /**
      * Voice ID to use when synthesizing speech.
-     * Default is {@link common.defaultSpeechSynthesisVoice}.
      */
     voiceID: string = common.defaultSpeechSynthesisVoice;
     /**
      * Voice speed to use when synthesizing speech.
-     * Default is {@link common.defaultSpeechSynthesisSpeed}.
      */
     voiceSpeed: number = common.defaultSpeechSynthesisSpeed;
-    /** Don't send client info to server. Default is `false`. */
+    /** Don't send client info to server.
+     * @defaultValue `false`, set to `true` to not send client info to server.
+     */
     privateMode: boolean = false;
     /**
      * Client ID should be set by client app.
@@ -83,33 +94,42 @@ export class EmblaSessionConfig {
     clientID?: string;
     /**
      * Client type string (e.g. `web`, `ios`, `android`).
+     *
      * Third-party clients should use their own name
      * here, e.g. `myappname_web`, `myappname_ios`, `myappname_android`.
      */
     clientType?: string;
-    /** Client version string(e.g. `1.3.1`). */
-    clientVersion?: string;
+    /**
+     * Client version string (e.g. `1.3.1`).
+     * @see {@link EmblaCoreVersion}
+     */
+    clientVersion?: string = common.SOFTWARE_VERSION;
     /**
      * Whether Ratatoskur should send ASR text to the query server
      * and subsequently forward the query response to the client.
-     * Defaults to `true`.
+     * @defaultValue `true`, set to `false` to only perform ASR.
      */
     query: boolean = true;
     /**
      * Whether Ratatoskur should speech synthesize query server answer
      * and subsequently forward the audio to the client.
-     * Defaults to `true`.
+     * @defaultValue `true`, set to `false` to turn off speech synthesis of query answer.
      */
     tts: boolean = true;
     /**
-     * Query server URL. Defaults to {@link common.defaultQueryServer}.
+     * Query server URL.
      */
     queryServer: string = common.defaultQueryServer;
-    /** Whether to play session UI sounds. */
+    /**
+     * Whether to play session UI sounds.
+     * @defaultValue `true`, set to `false` to not play any sounds.
+     */
     audio: boolean = true;
     /**
      * Optional callback that provides the user's current
      * location as WGS84 coordinates (latitude, longitude).
+     * 
+     * **This is needed to answer queries that depend on the user's location.**
      */
     getLocation?: () => number[] | undefined;
 
@@ -118,36 +138,43 @@ export class EmblaSessionConfig {
     /**
      * Called when the session has received a greeting from
      * the server and has begun streaming audio.
+     * @group Event Handlers
      */
     onStartStreaming?: () => void;
     /**
      * Called when the session has received
      * speech text from the server.
+     * @group Event Handlers
      */
     onSpeechTextReceived?: (transcript: string, isFinal: boolean, msg: common.ASRResponseMessage) => void;
     /**
      * Called when the session has received *final* speech text
      * from the server and is waiting for a query answer.
+     * @group Event Handlers
      */
     onStartQuerying?: () => void;
     /**
      * Called when the session has received
      * a query answer from the server.
+     * @group Event Handlers
      */
     onQueryAnswerReceived?: (answer: common.QueryResponseData) => void;
     /**
      * Called when the session is playing the
      * answer as audio.
+     * @group Event Handlers
      */
     onStartAnswering?: () => void;
     /**
      * Called when the session has finished playing the audio
      * answer or has been manually ended.
+     * @group Event Handlers
      */
     onDone?: () => void;
     /**
      * Called when the session has encountered
      * an error and ended.
+     * @group Event Handlers
      */
     onError?: (error: string) => void;
 
@@ -160,13 +187,17 @@ export class EmblaSessionConfig {
         return EmblaSessionConfig._token?.tokenString || "";
     }
 
+    /**
+     * Check whether the current authentication token is valid/not expired.
+     * @returns `true` if token is currently valid, `false` otherwise.
+     */
     hasValidToken(): boolean {
         const t = EmblaSessionConfig._token;
         return t?.tokenString !== "" && !t?.isExpired();
     }
 
     /**
-     * Update token for WebSocket communication if needed.
+     * Update token for WebSocket communication, if needed.
      * @async
      */
     async fetchToken(): Promise<void> {

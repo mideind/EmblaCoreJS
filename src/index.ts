@@ -16,6 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+/**
+ * The main functionality of EmblaCore is contained within {@link EmblaSession}.
+ * 
+ * @example
+ * Simple example of usage:
+ * ```js
+ * import * as EmblaCore from emblacore.js
+ * 
+ * // Set up an `EmblaSessionConfig` instance, optionally specifying server URL as argument
+ * let config = new EmblaCore.EmblaSessionConfig();
+ * // Set server API key
+ * config.apiKey = "...your api key here...";
+ * // Optionally set handlers for different events
+ * // (see section `Event Handlers` in documentation for EmblaSessionConfig)
+ * config.onQueryAnswerReceived = (answer) => { /* ... *\/ };
+ * /* Note: to allow query service to answer location based questions set `config.getLocation` *\/
+ * /* ... *\/
+ * 
+ * // Create and start an EmblaSession
+ * let session = new EmblaCore.EmblaSession(config);
+ * await session.start();
+ * ```
+ * @see {@link EmblaSessionConfig} - Configuration object for sessions.
+ * @see {@link EmblaSession} - Session objects.
+ * 
+ * @packageDocumentation
+ */
 
 export { EmblaSession, EmblaSessionState } from "./session.js";
 export { EmblaSessionConfig } from "./config.js";

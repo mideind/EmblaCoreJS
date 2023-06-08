@@ -31,9 +31,9 @@ export class EmblaSpeechSynthesizer {
     /**
      * Request speech synthesis of the given text. Returns audio URL.
      * @async
-     * @param text Text to speech synthesize.
-     * @param apiKey API key for Ratatoskur.
-     * @param ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {string} text Text to speech synthesize.
+     * @param {string} apiKey API key for Ratatoskur.
+     * @param {TTSInput?} ttsOptions Options for speech synthesis (Voice ID and speed).
      * @returns URL to speech synthesized audio file.
      */
     public static async synthesize(text: string, apiKey: string, ttsOptions?: TTSInput): Promise<string | null> {

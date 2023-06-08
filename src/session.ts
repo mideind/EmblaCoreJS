@@ -29,11 +29,36 @@ import { capFirst } from "./util.js";
  * @readonly
  * @enum {number}
  */
-export enum EmblaSessionState { idle, starting, streaming, answering, done }
+export enum EmblaSessionState {
+    /** Session is idle (hasn't started yet). */
+    idle,
+    /** Session is starting but hasn't started streaming audio. */
+    starting,
+    /** Session is streaming audio. */
+    streaming,
+    /** Session has received final ASR result and is answering a query. */
+    answering,
+    /** Session has finished. */
+    done
+}
 
 
 /**
- * Main session object encapsulating Embla's core functionality.
+ * @summary Main session object encapsulating Embla's core functionality.
+ * @remarks
+ * A usual session consists of three phases:
+ * 1. **ASR**
+ * 
+ *      User speaks into their microphone and receives transcription feedback from the server.
+ * 2. **Query**
+ * 
+ *      The final transcription is sent to query server and an answer is received from the server.
+ * 3. **TTS**
+ * 
+ *      The answer to the query is read aloud for the user.
+ * 
+ * The query and TTS phases can be skipped by setting the
+ * appropriate flags in the {@link EmblaSessionConfig|configuration object}.
  */
 export class EmblaSession {
     /** Current state of session object. @type {EmblaSessionState} */
@@ -43,7 +68,7 @@ export class EmblaSession {
 
     /**
      * Construct a session with the given configuration.
-     * @param cfg Embla session config.
+     * @param {EmblaSessionConfig} cfg Embla session config.
      */
     constructor(cfg: EmblaSessionConfig) {
         this._config = cfg;

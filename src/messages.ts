@@ -65,7 +65,7 @@ export class GreetingsOutputMessage {
 
     /**
      * Create a greetings message from a session config object.
-     * @param config Session config object.
+     * @param {EmblaSessionConfig} config Session config object.
      * @returns Greetings message.
      */
     static fromConfig(config: EmblaSessionConfig): GreetingsOutputMessage {

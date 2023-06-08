@@ -92,8 +92,8 @@ export class AudioPlayer {
 
     /**
      * Play sound signifying no microphone permissions.
-     * @param voiceId Selected TTS voice.
-     * @param playbackSpeed Selected TTS speed.
+     * @param {string} voiceId Selected TTS voice.
+     * @param {number?} playbackSpeed Selected TTS speed.
      */
     static playNoMic(voiceId?: string, playbackSpeed?: number) {
         this.playSound("nomic", voiceId ?? defaultSpeechSynthesisVoice, playbackSpeed);
@@ -101,8 +101,8 @@ export class AudioPlayer {
 
     /**
      * Play a random sound signifying that the query couldn't be answered.
-     * @param voiceId Selected TTS voice.
-     * @param playbackSpeed Selected TTS speed.
+     * @param {string} voiceId Selected TTS voice.
+     * @param {number?} playbackSpeed Selected TTS speed.
      * @returns The text that was read (for displaying in UI).
      */
     static playDunno(voiceId: string, playbackSpeed?: number): string {
@@ -123,9 +123,9 @@ export class AudioPlayer {
 
     /**
      * Play a specific sound. Some sounds are dependent on TTS settings.
-     * @param soundName Name of sound to play.
-     * @param voiceId Selected TTS voice (if applicable).
-     * @param playbackSpeed Selected TTS speed.
+     * @param {string} soundName Name of sound to play.
+     * @param {string?} voiceId Selected TTS voice (if applicable).
+     * @param {number?} playbackSpeed Selected TTS speed.
      */
     static playSound(soundName: string, voiceId?: string, playbackSpeed?: number) {
         let url = `${this._audioURL}/${soundName}`;
@@ -139,8 +139,8 @@ export class AudioPlayer {
 
     /**
      * Play sound fetched from a URL.
-     * @param audioURL URL to audio file for playing.
-     * @param playbackSpeed Playback speed/rate.
+     * @param {string} audioURL URL to audio file for playing.
+     * @param {number?} playbackSpeed Playback speed/rate.
      */
     static playURL(audioURL: string, playbackSpeed?: number) {
         this._playAudio(audioURL, playbackSpeed);
@@ -159,8 +159,8 @@ export class AudioPlayer {
 
     /**
      * Play HTMLAudioElement and wait for it to finish (or be paused).
-     * @param audioURL URL to audio file for playing.
-     * @param playbackSpeed Playback speed/rate, default is 1.
+     * @param {string} audioURL URL to audio file for playing.
+     * @param {number?} playbackSpeed Playback speed/rate, default is 1.
      */
     private static _playAudio(audioURL: string, playbackSpeed?: number) {
         let audio = new Audio(audioURL);
@@ -170,6 +170,9 @@ export class AudioPlayer {
         this._playAudioQueue();
     }
 
+    /**
+     * @internal
+     */
     private static _playAudioQueue() {
         if (this._currAudio === undefined) {
             // If we aren't already playing audio, get the next audio element from queue

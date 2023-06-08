@@ -17,7 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** Authentication token object required to start a WebSocket session. */
+/**
+ * Authentication token object required to start a WebSocket session.
+ * @internal
+ */
 export class AuthenticationToken {
 
     constructor(
@@ -27,7 +30,7 @@ export class AuthenticationToken {
 
     /**
      * Create an AuthenticationToken from JSON string data.
-     * @param data JSON string to parse.
+     * @param {string} data JSON string to parse.
      * @returns AuthenticationToken instance.
      */
     public static fromJson(data: string): AuthenticationToken {
