@@ -17,11 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { EmblaAPI } from "api.js";
 import { defaultSpeechSynthesisVoice } from "common.js";
+import { TTSOptions } from "messages.js";
 import { asciify } from "util.js";
 
 /**
- * Class containing static methods for playing audio.
+ * Class containing static methods for playing audio and TTS.
  */
 export class AudioPlayer {
     private static _currAudio?: HTMLAudioElement;
@@ -155,6 +157,23 @@ export class AudioPlayer {
         }
         this._currAudio = undefined;
         this._audioQueue = [];
+    }
+
+    /**
+     * Request speech synthesis of the given text. Returns audio URL.
+     * @async
+     * @param {string} text Text to speech synthesize.
+     * @param {string?} apiKey Server API key.
+     * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @throws {Error} If TTS service returned no audio.
+     * @returns URL to speech synthesized audio file.
+     */
+    static async speak(text: string, apiKey?: string, ttsOptions?: TTSOptions) {
+        let audioURL = await EmblaAPI.synthesize(text, apiKey, ttsOptions);
+        if (audioURL === undefined) {
+            throw new Error("Error during speech synthesis");
+        }
+        this._playAudio(audioURL);
     }
 
     /**

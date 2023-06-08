@@ -19,9 +19,9 @@
 
 /**
  * ASCII-fy a string, turning Icelandic characters into ASCII.
+ * @internal
  * @param {string} s String to ASCII-fy.
- * @returns ASCII-fied string with no special Icelandic characters
- * specific to Icelandic.
+ * @returns ASCII-fied string with no special Icelandic characters.
  */
 export function asciify(s: string) {
     const icechar2ascii = {
@@ -54,6 +54,7 @@ export function asciify(s: string) {
 
 /**
  * Capitalize the first character of a string, leaving the rest unchanged.
+ * @internal
  * @param {string} s String to capitalize first character of.
  * @returns String with first character capitalized.
  */

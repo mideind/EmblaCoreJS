@@ -35,7 +35,7 @@ export class EmblaSessionConfig {
 
     /**
      * Create an EmblaSessionConfig instance.
-     * @param {string} server Optional, server for session to communicate with.
+     * @param {string} server Optional, specify non-default server for session to communicate with.
      */
     constructor(server: string = common.defaultServer) {
         console.debug("Creating EmblaSessionConfig object");
@@ -53,24 +53,24 @@ export class EmblaSessionConfig {
     }
 
     /**
-     * API endpoint URL which provides authentication tokens.
+     * URL for server API endpoint which provides authentication tokens.
      * @internal
      */
     private _tokenURL: string;
     /**
-     * WebSocket URL for the Ratatoskur ASR + Query + TTS pipeline.
+     * URL for server WebSocket API endpoint.
      * Created from the server URL passed into the constructor.
      * @readonly
      * @internal
      */
     socketURL: string;
     /**
-     * Server API key. _This is required for the default server._
+     * Server API key. **_This is required for the default server._**
      */
     apiKey?: string;
     /**
      * Speech-to-text language (e.g. `is-IS`).
-     * Currently ignored as only `is-IS` is supported.
+     * Currently only `is-IS` is supported.
      */
     language: string = common.speechToTextLanguage;
     /** Override default ASR engine. */
@@ -105,13 +105,13 @@ export class EmblaSessionConfig {
      */
     clientVersion?: string = common.SOFTWARE_VERSION;
     /**
-     * Whether Ratatoskur should send ASR text to the query server
+     * Whether server should send ASR text to the query service
      * and subsequently forward the query response to the client.
      * @defaultValue `true`, set to `false` to only perform ASR.
      */
     query: boolean = true;
     /**
-     * Whether Ratatoskur should speech synthesize query server answer
+     * Whether server should speech synthesize query service answer
      * and subsequently forward the audio to the client.
      * @defaultValue `true`, set to `false` to turn off speech synthesis of query answer.
      */
@@ -180,8 +180,8 @@ export class EmblaSessionConfig {
 
 
     /**
-     * WebSocket token for authenticated
-     * communication with the server.
+     * WebSocket token for authenticated communication with the server.
+     * @internal
      */
     get token(): string {
         return EmblaSessionConfig._token?.tokenString || "";
@@ -189,6 +189,7 @@ export class EmblaSessionConfig {
 
     /**
      * Check whether the current authentication token is valid/not expired.
+     * @internal
      * @returns `true` if token is currently valid, `false` otherwise.
      */
     hasValidToken(): boolean {

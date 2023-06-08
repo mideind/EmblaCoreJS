@@ -63,8 +63,9 @@ export enum EmblaSessionState {
 export class EmblaSession {
     /** Current state of session object. @type {EmblaSessionState} */
     state: EmblaSessionState = EmblaSessionState.idle;
+
     private _config: EmblaSessionConfig;
-    private _channel?: WebSocket;
+    private _socket?: WebSocket;
 
     /**
      * Construct a session with the given configuration.
@@ -130,6 +131,7 @@ export class EmblaSession {
 
     /**
      * Cancel an ongoing Embla session.
+     * @async
      */
     async cancel() {
         await this.stop();
@@ -140,7 +142,7 @@ export class EmblaSession {
 
     /**
      * Check whether the session is active or not.
-     * @returns true if this session is not idle or finished.
+     * @returns `true` if this session is not idle or finished.
      */
     isActive(): boolean {
         return (
@@ -150,7 +152,7 @@ export class EmblaSession {
     }
 
     /**
-     * Return current state of the session.
+     * Return current {@link EmblaSessionState|state} of the session.
      * @returns The current state of the session.
      */
     currentState(): EmblaSessionState {
@@ -162,8 +164,8 @@ export class EmblaSession {
         await AudioRecorder.stop();
 
         // Close WebSocket connection
-        if (this._channel !== undefined) {
-            this._channel.close();
+        if (this._socket !== undefined) {
+            this._socket.close();
         }
     }
 
@@ -190,20 +192,20 @@ export class EmblaSession {
     private async _openWebSocketConnection() {
         try {
             const wsUri = new URL(this._config.socketURL);
-            this._channel = new WebSocket(wsUri);
+            this._socket = new WebSocket(wsUri);
 
-            this._channel.onopen = async (_ev: Event) => {
+            this._socket.onopen = async (_ev: Event) => {
                 // Send greeting message when connection is opened
                 const greetings = GreetingsOutputMessage.fromConfig(this._config);
-                this._channel!.send(greetings.toJSON());
+                this._socket!.send(greetings.toJSON());
                 // Start streaming audio to server
                 await this._startStreaming();
             };
-            this._channel.onerror = async (ev: Event) => {
+            this._socket.onerror = async (ev: Event) => {
                 await this._error(`Error listening on WebSocket connection: ${ev}`);
             };
 
-            this._channel.onmessage = this._createOnMessageHandler();
+            this._socket.onmessage = this._createOnMessageHandler();
 
         } catch (err) {
             await this._error(`Error communicating with server: ${err}`);
@@ -216,7 +218,7 @@ export class EmblaSession {
             (data: Blob) => {
                 console.log("sending blob: ", data);
                 // Skip WAV header (RecordRTC prepends a WAV header to each blob)
-                this._channel!.send(data.slice(WAVHeaderLength));
+                this._socket!.send(data.slice(WAVHeaderLength));
             },
             async (error: string) => {
                 await this._error(error);
@@ -229,7 +231,8 @@ export class EmblaSession {
 
     /**
      * Create a message handler function.
-     * (Done so that `this` doesn't point to the WebSocket.)
+     * (Workaround so that `this` doesn't point to the WebSocket.)
+     * @internal
      * @returns Message handler function.
      */
     private _createOnMessageHandler() {

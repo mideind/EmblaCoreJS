@@ -23,6 +23,12 @@
  */
 export class AuthenticationToken {
 
+    /**
+     * Constructor used internally. Use {@link AuthenticationToken.fromJson} instead.
+     * @internal
+     * @param tokenString Authentication token.
+     * @param expiresAt Expiration timestamp.
+     */
     constructor(
         public tokenString: string,
         public expiresAt: Date
@@ -50,7 +56,7 @@ export class AuthenticationToken {
 
     /**
      * Check whether token is safe to use for a new WebSocket session.
-     * @returns true if token is expired (or almost expired), false otherwise
+     * @returns `true` if token is expired (or almost expired), `false` otherwise
      */
     isExpired(): boolean {
         // If token expires in less than 30 seconds, consider it expired.

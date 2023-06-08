@@ -54,23 +54,30 @@ export const supportedSpeechSynthesisVoices = [
 ];
 
 // Responses from the server
+/** @internal */
 interface ResponseMessage {
     type: string,
     code: number
 }
+/** @internal */
 export interface GreetingsResponseMessage extends ResponseMessage {
     info: object
 }
+/** @internal */
 export interface ASRResponseMessage extends ResponseMessage {
     transcript: string,
     is_final: boolean,
     alternatives: [string]
 }
+/**
+ * Response data from the query server.
+ */
 export interface QueryResponseData {
     valid: boolean,
     answer?: string,
-    audio?: string
+    audio?: string,
 }
+/** @internal */
 export interface QueryResponseMessage extends ResponseMessage {
     data: QueryResponseData
 }

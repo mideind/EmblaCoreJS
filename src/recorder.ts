@@ -45,7 +45,7 @@ const mediaRecorderConfig = {
 };
 
 /**
- * Class for handling microphone recording & streaming.
+ * @summary Class for handling microphone recording & streaming.
  */
 export class AudioRecorder {
     private static _micRecorder?: RecordRTC.RecordRTCPromisesHandler = undefined;

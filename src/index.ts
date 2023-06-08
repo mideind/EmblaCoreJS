@@ -44,13 +44,14 @@
  * @packageDocumentation
  */
 
+// Classes
 export { EmblaSession, EmblaSessionState } from "./session.js";
 export { EmblaSessionConfig } from "./config.js";
-export { EmblaSpeechSynthesizer } from "./speech.js";
+export { EmblaAPI } from "./api.js";
 export { AudioPlayer } from "./audio.js";
 export { AudioRecorder } from "./recorder.js";
-import {
-    SOFTWARE_VERSION
-} from "./common.js";
-/** Current version number for EmblaCoreJS. */
-export const EmblaCoreVersion = SOFTWARE_VERSION;
+// Interfaces
+export { QueryResponseData } from "./common.js";
+export { ASROptions, TTSOptions, QueryOptions } from './messages.js';
+// Constants
+export { SOFTWARE_VERSION as EmblaCoreVersion } from "./common.js";

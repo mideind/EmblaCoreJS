@@ -19,7 +19,7 @@
 
 import * as dotenv from "dotenv";
 dotenv.config();
-import { EmblaSpeechSynthesizer } from "../src/speech";
+import { EmblaAPI } from "../src/api";
 
 let it_net = function () {
     const nt = process.env["NETWORK_TESTS"];
@@ -31,21 +31,26 @@ let it_net = function () {
     }
 }();
 
-describe("EmblaSpeechSynthesizer tests", function () {
+describe("EmblaAPI tests", function () {
     it("should have the correct interface", function () {
         // Static methods
-        expect(EmblaSpeechSynthesizer).toHaveProperty("synthesize");
-        expect(typeof EmblaSpeechSynthesizer.synthesize).toBe("function");
+        expect(EmblaAPI).toHaveProperty("synthesize");
+        expect(typeof EmblaAPI.synthesize).toBe("function");
+        expect(EmblaAPI).toHaveProperty("performQuery");
+        expect(typeof EmblaAPI.performQuery).toBe("function");
+        expect(EmblaAPI).toHaveProperty("clearUserData");
+        expect(typeof EmblaAPI.performQuery).toBe("function");
     })
+    //
+    // If the NETWORK_TESTS env variable is set, run the following tests
+    //
     it_net("should not speech synthesize text (incorrect api key)", async function () {
-        // If the NETWORK_TESTS env variable is set, run this test
-        const audio_url = await EmblaSpeechSynthesizer.synthesize("Þetta er prufutexti.", "an incorrect API key");
-        expect(audio_url).toEqual(null);
+        const audio_url = await EmblaAPI.synthesize("Þetta er prufutexti.", "an incorrect API key");
+        expect(audio_url).toBe(undefined);
     })
     it_net("should speech synthesize text", async function () {
-        // If the NETWORK_TESTS env variable is set, run this test
-        const audio_url = await EmblaSpeechSynthesizer.synthesize("Þetta er prufutexti.", process.env["X_API_KEY"] ?? "");
-        expect(audio_url).toBeInstanceOf("string");
+        const audio_url = await EmblaAPI.synthesize("Þetta er prufutexti.", process.env["X_API_KEY"] ?? "");
+        expect(typeof audio_url).toBe("string");
         expect(audio_url!.startsWith("http")).toBeTruthy();
     })
 });
