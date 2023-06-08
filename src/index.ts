@@ -22,4 +22,8 @@ export { EmblaSessionConfig } from "./config.js";
 export { EmblaSpeechSynthesizer } from "./speech.js";
 export { AudioPlayer } from "./audio.js";
 export { AudioRecorder } from "./recorder.js";
-export { SOFTWARE_NAME, SOFTWARE_VERSION, SOFTWARE_AUTHOR, SOFTWARE_LICENSE } from "./common.js";
+import {
+    SOFTWARE_VERSION
+} from "./common.js";
+/** Current version number for EmblaCoreJS. */
+export const EmblaCoreVersion = SOFTWARE_VERSION;
