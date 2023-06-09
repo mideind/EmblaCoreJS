@@ -51,12 +51,12 @@ export class EmblaAPI {
      * @param {string?} serverURL Server URL.
      */
     static async clearUserData(clientID: string, apiKey?: string, allData: boolean = false, serverURL?: string) {
-        let qargs = {
+        const qargs = {
             action: allData ? 'clear_all' : 'clear',
             client_id: clientID
         };
 
-        let apiURL = `${serverURL}${common.clearHistoryEndpoint}`;
+        const apiURL = `${serverURL}${common.clearHistoryEndpoint}`;
         return await this._makePOSTRequest(apiURL, apiKey, qargs);
     }
 
@@ -91,7 +91,7 @@ export class EmblaAPI {
      */
     private static async _makePOSTRequest(apiURL: string, apiKey?: string, qargs?: any): Promise<any> {
         try {
-            let response = await fetch(
+            const response = await fetch(
                 new URL(apiURL),
                 {
                     method: "POST",

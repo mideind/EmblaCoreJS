@@ -128,7 +128,7 @@ export class EmblaSessionConfig {
     /**
      * Optional callback that provides the user's current
      * location as WGS84 coordinates (latitude, longitude).
-     * 
+     *
      * **This is needed to answer queries that depend on the user's location.**
      */
     getLocation?: () => number[] | undefined;

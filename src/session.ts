@@ -48,15 +48,15 @@ export enum EmblaSessionState {
  * @remarks
  * A usual session consists of three phases:
  * 1. **ASR**
- * 
+ *
  *      User speaks into their microphone and receives transcription feedback from the server.
  * 2. **Query**
- * 
+ *
  *      The final transcription is sent to query server and an answer is received from the server.
  * 3. **TTS**
- * 
+ *
  *      The answer to the query is read aloud for the user.
- * 
+ *
  * The query and TTS phases can be skipped by setting the
  * appropriate flags in the {@link EmblaSessionConfig|configuration object}.
  */

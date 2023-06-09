@@ -18,12 +18,12 @@
  */
 /**
  * The main functionality of EmblaCore is contained within {@link EmblaSession}.
- * 
+ *
  * @example
  * Simple example of usage:
  * ```js
  * import * as EmblaCore from emblacore.js
- * 
+ *
  * // Set up an `EmblaSessionConfig` instance, optionally specifying server URL as argument
  * let config = new EmblaCore.EmblaSessionConfig();
  * // Set server API key
@@ -33,14 +33,14 @@
  * config.onQueryAnswerReceived = (answer) => { /* ... *\/ };
  * /* Note: to allow query service to answer location based questions set `config.getLocation` *\/
  * /* ... *\/
- * 
+ *
  * // Create and start an EmblaSession
  * let session = new EmblaCore.EmblaSession(config);
  * await session.start();
  * ```
  * @see {@link EmblaSessionConfig} - Configuration object for sessions.
  * @see {@link EmblaSession} - Session objects.
- * 
+ *
  * @packageDocumentation
  */
 
@@ -50,6 +50,12 @@ export { EmblaSessionConfig } from "./config.js";
 export { EmblaAPI } from "./api.js";
 export { AudioPlayer } from "./audio.js";
 export { AudioRecorder } from "./recorder.js";
+export { AuthenticationToken as _AuthenticationToken } from "./token.js";
+export {
+    GreetingsResponseMessage as _GreetingsResponseMessage,
+    ASRResponseMessage as _ASRResponseMessage,
+    QueryResponseMessage as _QueryResponseMessage
+} from "./common.js";
 // Interfaces
 export { QueryResponseData } from "./common.js";
 export { ASROptions, TTSOptions, QueryOptions } from './messages.js';

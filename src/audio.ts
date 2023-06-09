@@ -27,7 +27,7 @@ import { asciify } from "util.js";
  */
 export class AudioPlayer {
     private static _currAudio?: HTMLAudioElement;
-    private static _audioQueue: Array<HTMLAudioElement> = [];
+    private static _audioQueue: HTMLAudioElement[] = [];
     private static _fileExtension = "mp3";
     // private static _audioFiles = {};
     private static _audioURL = "https://embla.is/assets/audio";
@@ -118,7 +118,7 @@ export class AudioPlayer {
             "dunno07": "Því miður veit ég það ekki.",
         };
         const keys = Object.keys(dunnoStrings);
-        const randomKey = keys[keys.length * Math.random() << 0];
+        const randomKey = keys[keys.length * Math.random() << 0]; // tslint:disable-line
         this.playSound(randomKey, voiceId, playbackSpeed);
         return dunnoStrings[randomKey];
     }
@@ -169,7 +169,7 @@ export class AudioPlayer {
      * @returns URL to speech synthesized audio file.
      */
     static async speak(text: string, apiKey?: string, ttsOptions?: TTSOptions) {
-        let audioURL = await EmblaAPI.synthesize(text, apiKey, ttsOptions);
+        const audioURL = await EmblaAPI.synthesize(text, apiKey, ttsOptions);
         if (audioURL === undefined) {
             throw new Error("Error during speech synthesis");
         }
@@ -182,7 +182,7 @@ export class AudioPlayer {
      * @param {number?} playbackSpeed Playback speed/rate, default is 1.
      */
     private static _playAudio(audioURL: string, playbackSpeed?: number) {
-        let audio = new Audio(audioURL);
+        const audio = new Audio(audioURL);
         audio.playbackRate = playbackSpeed ?? 1;
         this._audioQueue.push(audio);
 
