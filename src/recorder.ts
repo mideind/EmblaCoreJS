@@ -88,7 +88,6 @@ export class AudioRecorder {
             // Start recording
             this._micRecorder.startRecording();
         } catch (e: any) {
-            console.error(e);
             errHandler(e.toString());
         }
     }

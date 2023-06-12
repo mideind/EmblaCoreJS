@@ -48,7 +48,6 @@ export class AuthenticationToken {
             tokenString = parsed.token;
             expiresAt = new Date(parsed.expires_at);
         } catch (e) {
-            console.debug(`Failed to parse token JSON: ${e}`);
             tokenString = "";
             expiresAt = new Date(Date.now());
         }

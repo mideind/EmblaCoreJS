@@ -73,7 +73,6 @@ export class EmblaSession {
      */
     constructor(cfg: EmblaSessionConfig) {
         this._config = cfg;
-        console.log(`Session created with config: ${cfg.toString()}`);
     }
 
     /**
@@ -121,7 +120,6 @@ export class EmblaSession {
      * @async
      */
     async stop() {
-        console.debug("Ending session...");
         await this._stop();
 
         this.state = EmblaSessionState.done;
@@ -176,7 +174,6 @@ export class EmblaSession {
             return;
         }
 
-        console.debug(`Error in session: ${errMsg}`);
         await this._stop();
 
         // Set state to done
@@ -218,7 +215,6 @@ export class EmblaSession {
         await AudioRecorder.start(
             (data: Blob) => {
                 if (this._socket !== undefined) {
-                    console.log("sending blob: ", data);
                     this._socket.send(data);
                 }
             },
@@ -322,7 +318,6 @@ export class EmblaSession {
                 data.valid === false ||
                 data.answer === undefined) {
                 // Handle no answer scenario
-                console.log("Query result did not contain an answer, playing dunno answer");
                 const dunnoMsg = AudioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
                 await this.stop();
 
@@ -343,7 +338,6 @@ export class EmblaSession {
 
             // Play remote audio file
             const audioURL = data.audio;
-            console.log(audioURL);
             if (audioURL !== undefined && audioURL !== "") {
                 try {
                     AudioPlayer.playURL(audioURL);

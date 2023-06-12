@@ -39,7 +39,6 @@ export class EmblaSessionConfig {
      * @param {string} server Optional, specify non-default server for session to communicate with.
      */
     constructor(fetchToken?: (() => Promise<AuthenticationToken | undefined>), server: string = common.defaultServer) {
-        console.debug("Creating EmblaSessionConfig object");
 
         // If fetchToken is specified, we use that function to fetch tokens.
         this.tokenFetcher = fetchToken;
@@ -53,7 +52,6 @@ export class EmblaSessionConfig {
         } else {
             webSocketURL = webSocketURL.replace("http", "ws");
         }
-        console.debug(`Using socket URL ${webSocketURL}`);
         this.socketURL = `${webSocketURL}${common.socketEndpoint}`;
     }
 
@@ -222,7 +220,6 @@ export class EmblaSessionConfig {
      */
     async fetchToken(): Promise<void> {
         if (EmblaSessionConfig._token !== undefined && !EmblaSessionConfig._token.isExpired()) {
-            console.debug("Token still valid, not fetching a new one");
             return;
         }
 
@@ -244,7 +241,6 @@ export class EmblaSessionConfig {
             );
 
             EmblaSessionConfig._token = AuthenticationToken.fromJson(await response.text());
-            console.debug(`Received ${EmblaSessionConfig._token}`);
         } catch (e) {
             // NOTE: the following cast is unsafe,
             // JS can raise other things than Errors
