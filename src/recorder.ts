@@ -36,7 +36,7 @@ const mediaConstraints: MediaStreamConstraints = { audio: audioConstraints };
 const mediaRecorderConfig = {
     type: "audio",
     recorderType: RecordRTC.StereoAudioRecorder,
-    mimeType: "audio/pcm",
+    mimeType: "audio/wav",
     desiredSampRate: audioConstraints.sampleRate ? Number(audioConstraints.sampleRate) : undefined,
     disableLogs: true,
     timeSlice: 100, /* ms */

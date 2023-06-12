@@ -17,11 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { asciify } from "../src/util";
+import { asciify, capFirst } from "../src/util";
 
 describe("Util tests", () => {
-    test("asciify should turn Guðrún into Gudrun", () => {
+    it("asciify should turn Guðrún into Gudrun", () => {
         const result = asciify("Guðrún");
         expect(result).toEqual("Gudrun");
-    });
+    })
+    it("should capitalize first letter", () => {
+        expect(capFirst("abcd")).toEqual("Abcd");
+        expect(capFirst("")).toEqual("");
+        expect(capFirst("g")).toEqual("G");
+        expect(capFirst("12")).toEqual("12");
+    })
 });

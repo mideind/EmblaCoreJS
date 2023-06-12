@@ -15,8 +15,21 @@ function log(msg) {
     logArea.scrollTop = logArea.scrollHeight;
 }
 
+/**
+ * Function which fetches authentication tokens from proxy endpoint,
+ * and returns instances of EmblaCore.AuthenticationToken.
+ */
+async function proxyFetchToken() {
+    // Note: here we simply use the same Ratatoskur server,
+    // but this could be an endpoint in your application which acts as a proxy for the Ratatoskur token endpoint.
+    let r = await fetch(`${urlInput.value}/rat/v1/token`, {
+        headers: { "X-API-Key": apiKeyInput.value },
+    });
+    return EmblaCore.AuthenticationToken.fromJson(await r.text());
+}
+
 // Create config (this should be reused if possible)
-var config = new EmblaCore.EmblaSessionConfig(urlInput.value);
+var config = new EmblaCore.EmblaSessionConfig(proxyFetchToken, urlInput.value);
 
 /** Set handler functions and API key for the current config. */
 function setupConfig() {
@@ -81,7 +94,10 @@ async function toggle_start() {
 
 // Add change event listener to url input
 urlInput.addEventListener("change", (event) => {
-    config = new EmblaCore.EmblaSessionConfig(event.target.value);
+    config = new EmblaCore.EmblaSessionConfig(
+        proxyFetchToken,
+        event.target.value
+    );
     setupConfig();
 });
 

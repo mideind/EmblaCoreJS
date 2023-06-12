@@ -29,11 +29,12 @@ export class AudioPlayer {
     private static _currAudio?: HTMLAudioElement;
     private static _audioQueue: HTMLAudioElement[] = [];
     private static _fileExtension = "mp3";
-    // private static _audioFiles = {};
     private static _audioURL = "https://embla.is/assets/audio";
+    // private static _audioFiles = {};
 
     /**
      * Pre-fetch audio assets.
+     * (Note: does nothing as of now.)
      * @async
      */
     static async init() {
@@ -66,7 +67,6 @@ export class AudioPlayer {
         //     "voicespeed-gudrun",
         //     "voicespeed-gunnar"
         // ];
-        // console.log(`audio fileNames: ${fileNames}`);
     }
 
     /**

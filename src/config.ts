@@ -18,7 +18,7 @@
  */
 
 import * as common from "./common.js";
-import * as token from "./token.js";
+import { AuthenticationToken } from "./token.js";
 
 /**
  * @summary EmblaSession configuration object.
@@ -31,14 +31,19 @@ export class EmblaSessionConfig {
      * Authentication token for WebSocket communication.
      * @internal
      */
-    private static _token?: token.AuthenticationToken;
+    private static _token?: AuthenticationToken;
 
     /**
      * Create an EmblaSessionConfig instance.
+     * @param fetchToken Optional, but recommended, async function which fetches authentication tokens for WebSocket communication.
      * @param {string} server Optional, specify non-default server for session to communicate with.
      */
-    constructor(server: string = common.defaultServer) {
+    constructor(fetchToken?: (() => Promise<AuthenticationToken | undefined>), server: string = common.defaultServer) {
         console.debug("Creating EmblaSessionConfig object");
+
+        // If fetchToken is specified, we use that function to fetch tokens.
+        this.tokenFetcher = fetchToken;
+
         this._tokenURL = `${server}${common.tokenEndpoint}`;
 
         let webSocketURL: string = server;
@@ -51,6 +56,12 @@ export class EmblaSessionConfig {
         console.debug(`Using socket URL ${webSocketURL}`);
         this.socketURL = `${webSocketURL}${common.socketEndpoint}`;
     }
+
+    /**
+     * If defined, used as function to fetch authentication tokens for WebSocket communication.
+     * This allows the authentication process to be proxied.
+     */
+    tokenFetcher?: (() => Promise<AuthenticationToken | undefined>)
 
     /**
      * URL for server API endpoint which provides authentication tokens.
@@ -198,7 +209,15 @@ export class EmblaSessionConfig {
     }
 
     /**
+     * Remove the authentication token, making the next session request a new token.
+     */
+    resetToken(): void {
+        EmblaSessionConfig._token = undefined;
+    }
+
+    /**
      * Update token for WebSocket communication, if needed.
+     * If config was created with a token fetching function that function is used instead of the default.
      * @async
      */
     async fetchToken(): Promise<void> {
@@ -206,6 +225,12 @@ export class EmblaSessionConfig {
             console.debug("Token still valid, not fetching a new one");
             return;
         }
+
+        if (this.tokenFetcher !== undefined) {
+            EmblaSessionConfig._token = await this.tokenFetcher();
+            return;
+        }
+
         // We either haven't gotten a token yet, or the one we
         // have has expired, so we fetch a new one.
         const timeout = 5e3; // milliseconds
@@ -218,7 +243,7 @@ export class EmblaSessionConfig {
                 }
             );
 
-            EmblaSessionConfig._token = token.AuthenticationToken.fromJson(await response.text());
+            EmblaSessionConfig._token = AuthenticationToken.fromJson(await response.text());
             console.debug(`Received ${EmblaSessionConfig._token}`);
         } catch (e) {
             // NOTE: the following cast is unsafe,

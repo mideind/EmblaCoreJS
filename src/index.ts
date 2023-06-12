@@ -50,7 +50,7 @@ export { EmblaSessionConfig } from "./config.js";
 export { EmblaAPI } from "./api.js";
 export { AudioPlayer } from "./audio.js";
 export { AudioRecorder } from "./recorder.js";
-export { AuthenticationToken as _AuthenticationToken } from "./token.js";
+export { AuthenticationToken } from "./token.js";
 // Interfaces
 export { ASROptions, TTSOptions, QueryOptions } from './messages.js';
 export { GreetingsResponseMessage, ASRResponseMessage, QueryResponseMessage, QueryResponseData } from "./common.js";

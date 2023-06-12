@@ -256,6 +256,10 @@ export class EmblaSession {
                             await this.cancel();
                             return;
                         }
+                        if (msg.name === "token_error") {
+                            // Error with our token, reset token in config
+                            this._config.resetToken();
+                        }
                         throw new Error(msg.message);
                     default:
                         throw new Error(`Invalid message type: ${msg.type}`);

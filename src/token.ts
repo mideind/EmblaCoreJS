@@ -19,7 +19,6 @@
 
 /**
  * Authentication token object required to start a WebSocket session.
- * @internal
  */
 export class AuthenticationToken {
 
@@ -36,6 +35,8 @@ export class AuthenticationToken {
 
     /**
      * Create an AuthenticationToken from JSON string data.
+     * @example
+     * let myToken = AuthenticationToken.fromJson('{"token":"hello","expires_at":"2023-04-27T14:05:30.428692"}');
      * @param {string} data JSON string to parse.
      * @returns AuthenticationToken instance.
      */
