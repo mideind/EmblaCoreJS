@@ -80,8 +80,6 @@ function updateButton() {
 async function toggle_start() {
     if (sessionIsActive()) {
         log("Starting session...");
-        // Ensure config API key is in sync with text input
-        config.apiKey = apiKeyInput.value;
         session = new EmblaCore.EmblaSession(config);
         await session.start();
     } else {
