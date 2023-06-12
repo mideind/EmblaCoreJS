@@ -56,7 +56,7 @@ yarn run test
 
 ## Example usage
 
-Example usages can be found in the `examples/` directory (currently only contains an example of usage in a browser environment).
+Example usages can be found in the `examples/` directory.
 
 ### Browser example
 
@@ -67,7 +67,6 @@ python3 -m http.server --bind 127.0.0.1 8000
 ```
 
 Open the following URL in the browser: [`http://localhost:8000/client.html`](http://localhost:8000/client.html).
-Note that running the example may require an API key for the server EmblaCoreJS is configured to communicate with.
 
 ## License
 
