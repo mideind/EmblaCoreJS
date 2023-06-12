@@ -19,7 +19,7 @@
 
 // @ts-ignore // Ignore missing spec file for RecordRTC
 import RecordRTC from "recordrtc";
-import { audioBitRate, audioNumChannels, audioSampleRate } from "./common.js";
+import { WAVHeaderLength, audioBitRate, audioNumChannels, audioSampleRate } from "./common.js";
 
 const audioConstraints: MediaTrackConstraints = {
     sampleRate: audioSampleRate,
@@ -80,7 +80,10 @@ export class AudioRecorder {
             // Copy media recorder config
             const options = { ...mediaRecorderConfig };
             // Connect dataHandler function
-            options.ondataavailable = dataHandler;
+            options.ondataavailable = (data: Blob) => {
+                // Skip WAV header (RecordRTC prepends a WAV header to each blob)
+                dataHandler(data.slice(WAVHeaderLength));
+            };
             this._micRecorder = new RecordRTC.RecordRTCPromisesHandler(this._stream, options);
             // Start recording
             this._micRecorder.startRecording();

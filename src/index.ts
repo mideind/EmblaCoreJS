@@ -51,13 +51,8 @@ export { EmblaAPI } from "./api.js";
 export { AudioPlayer } from "./audio.js";
 export { AudioRecorder } from "./recorder.js";
 export { AuthenticationToken as _AuthenticationToken } from "./token.js";
-export {
-    GreetingsResponseMessage as _GreetingsResponseMessage,
-    ASRResponseMessage as _ASRResponseMessage,
-    QueryResponseMessage as _QueryResponseMessage
-} from "./common.js";
 // Interfaces
-export { QueryResponseData } from "./common.js";
 export { ASROptions, TTSOptions, QueryOptions } from './messages.js';
+export { GreetingsResponseMessage, ASRResponseMessage, QueryResponseMessage, QueryResponseData } from "./common.js";
 // Constants
 export { SOFTWARE_VERSION as EmblaCoreVersion } from "./common.js";

@@ -58,6 +58,9 @@ export interface GreetingsData {
 export class GreetingsOutputMessage {
     readonly type: string = "greetings";
 
+    /**
+     * @internal
+     */
     constructor(
         protected token: string,
         public data: GreetingsData

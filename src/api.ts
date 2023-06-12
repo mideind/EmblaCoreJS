@@ -47,10 +47,10 @@ export class EmblaAPI {
      * Send request to clear query history and/or client data for a given device ID.
      * @param {string} clientID ID for this client.
      * @param {string?} apiKey Server API key.
-     * @param {boolean} allData Whether all data or only query history should be deleted server-side.
+     * @param {boolean} allData Whether all client specific data or only the query history should be deleted server-side.
      * @param {string?} serverURL Server URL.
      */
-    static async clearUserData(clientID: string, apiKey?: string, allData: boolean = false, serverURL?: string) {
+    static async clearUserData(clientID: string, apiKey?: string, allData: boolean = false, serverURL: string = common.defaultServer) {
         const qargs = {
             action: allData ? 'clear_all' : 'clear',
             client_id: clientID
@@ -66,9 +66,10 @@ export class EmblaAPI {
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
      * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {string?} serverURL Server URL.
      * @returns URL to speech synthesized audio file.
      */
-    public static async synthesize(text: string, apiKey?: string, ttsOptions?: TTSOptions): Promise<string | undefined> {
+    public static async synthesize(text: string, apiKey?: string, ttsOptions?: TTSOptions, serverURL: string = common.defaultServer): Promise<string | undefined> {
         const qargs = {
             "text": text,
             "options": {
@@ -76,7 +77,7 @@ export class EmblaAPI {
                 "voice_speed": ttsOptions?.voice_speed?.toString() ?? common.defaultSpeechSynthesisSpeed.toString(),
             }
         };
-        const apiURL = `${common.defaultServer}${common.speechSynthesisEndpoint}`;
+        const apiURL = `${serverURL}${common.speechSynthesisEndpoint}`;
 
         const body = await this._makePOSTRequest(apiURL, apiKey, qargs);
         return body.audio_url;

@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage, WAVHeaderLength } from "./common.js";
+import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage } from "./common.js";
 import { EmblaSessionConfig } from "./config.js";
 import { AudioRecorder } from "./recorder.js";
 import { AudioPlayer } from "./audio.js";
@@ -61,7 +61,7 @@ export enum EmblaSessionState {
  * appropriate flags in the {@link EmblaSessionConfig|configuration object}.
  */
 export class EmblaSession {
-    /** Current state of session object. @type {EmblaSessionState} */
+    /** Current state of session object. */
     state: EmblaSessionState = EmblaSessionState.idle;
 
     private _config: EmblaSessionConfig;
@@ -79,7 +79,7 @@ export class EmblaSession {
     /**
      * Static method to preload required assets.
      * Minimizes delay when starting a session for the first time.
-     * Call this method as early as possible.
+     * Call this method once, as early as possible.
      */
     static async prepare() {
         // Prefetch audio assets
@@ -88,6 +88,7 @@ export class EmblaSession {
 
     /**
      * Start an Embla session.
+     * @async
      */
     async start() {
         if (this.state !== EmblaSessionState.idle) {
@@ -216,9 +217,10 @@ export class EmblaSession {
         this.state = EmblaSessionState.streaming;
         await AudioRecorder.start(
             (data: Blob) => {
-                console.log("sending blob: ", data);
-                // Skip WAV header (RecordRTC prepends a WAV header to each blob)
-                this._socket!.send(data.slice(WAVHeaderLength));
+                if (this._socket !== undefined) {
+                    console.log("sending blob: ", data);
+                    this._socket.send(data);
+                }
             },
             async (error: string) => {
                 await this._error(error);
@@ -235,7 +237,7 @@ export class EmblaSession {
      * @internal
      * @returns Message handler function.
      */
-    private _createOnMessageHandler() {
+    private _createOnMessageHandler(): ((ev: MessageEvent) => Promise<void>) {
         return async (ev: MessageEvent<any>) => {
             try {
                 const msg = JSON.parse(ev.data);
