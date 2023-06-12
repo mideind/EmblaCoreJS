@@ -14,7 +14,8 @@ For the Dart/Flutter library see [EmblaCoreFlutter](https://github.com/mideind/E
 The bundled library, along with a minified version, can be found in the releases.
 See the [browser example](./examples/browser/README.md) for example usage.
 
-Note: using the library requires an API key for the Ratatoskur server instance you wish to communicate with.
+**Note:**
+using the library requires an API key for the Ratatoskur server instance you wish to communicate with.
 To prevent Ratatoskur API keys from being sent to clients, it is recommended to set up a proxy endpoint which
 requests and returns authentication tokens from Ratatoskur (endpoint documentation can be found [here](https://api.greynir.is/docs)).
 This keeps the Ratatoskur API key safe server-side.
