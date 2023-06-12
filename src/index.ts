@@ -24,9 +24,10 @@
  * ```js
  * import * as EmblaCore from emblacore.js
  *
- * // Set up an `EmblaSessionConfig` instance, optionally specifying server URL as argument
+ * // Set up an `EmblaSessionConfig` instance, optionally specifying a proxy token fetching method.
+ * // (For the sake of brevity, here we simply set the API key and use the default token fetching)
  * let config = new EmblaCore.EmblaSessionConfig();
- * // Set server API key
+ * // Set server API key (if code is run client-side, prefer proxying to exposing the API key like this)
  * config.apiKey = "...your api key here...";
  * // Optionally set handlers for different events
  * // (see section `Event Handlers` in documentation for EmblaSessionConfig)
