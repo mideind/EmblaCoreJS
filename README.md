@@ -1,7 +1,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Language](https://img.shields.io/badge/language-javascript-yellow)]()
 
-<img src="https://github.com/mideind/EmblaCoreJS/raw/main/img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
+<img src="./img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
 
 # EmblaCoreJS
 
@@ -72,7 +72,7 @@ Open the following URL in the browser: [`http://localhost:8000/client.html`](htt
 
 EmblaCore is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
 
-<a href="https://mideind.is"><img src="https://github.com/mideind/EmblaCoreJS/raw/main/img/mideind_logo.png" alt="Miðeind ehf."
+<a href="https://mideind.is"><img src="./img/mideind_logo.png" alt="Miðeind ehf."
 width="214" height="66" align="right" style="margin-left:20px; margin-bottom: 20px;"></a>
 
 This set of programs is free software: you can redistribute it and/or modify it
@@ -84,8 +84,11 @@ This set of programs is distributed in the hope that it will be useful, but WITH
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
+<a href="https://www.gnu.org/licenses/gpl-3.0.html"><img src="./img/GPLv3.png"
+align="right" style="margin-left:15px;" width="180" height="60"></a>
+
 The full text of the GNU General Public License v3 is
-[included here](https://github.com/mideind/EmblaCoreJS/raw/main/LICENSE.txt)
+[included here](./LICENSE.txt)
 and also available here:
 [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/licenses/gpl-3.0.html).
 

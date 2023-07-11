@@ -3,10 +3,10 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     // "target": "ES6",
-    // "module": "ESNext",
     // "outDir": "./lib/",
     "baseUrl": "./src/",
     // "declaration": true,
+    "module": "NodeNext",
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "lib": ["ES2021", "DOM"],
