@@ -17,10 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ASRResponseMessage, GreetingsResponseMessage, QueryResponseMessage } from "./common.js";
+import { ASRResponseMessage, AudioPlayerStaticInterface, AudioRecorderStaticInterface, GreetingsResponseMessage, QueryResponseMessage } from "./common.js";
 import { EmblaSessionConfig } from "./config.js";
-import { AudioRecorder } from "./recorder.js";
-import { AudioPlayer } from "./audio.js";
 import { GreetingsOutputMessage } from "./messages.js";
 import { capFirst } from "./util.js";
 
@@ -61,6 +59,9 @@ export enum EmblaSessionState {
  * appropriate flags in the {@link EmblaSessionConfig|configuration object}.
  */
 export class EmblaSession {
+    private static _audioRecorder: AudioRecorderStaticInterface;
+    private static _audioPlayer: AudioPlayerStaticInterface;
+
     /** Current state of session object. */
     state: EmblaSessionState = EmblaSessionState.idle;
 
@@ -73,16 +74,27 @@ export class EmblaSession {
      */
     constructor(cfg: EmblaSessionConfig) {
         this._config = cfg;
+        // Ensure prepare has been called
+        if (EmblaSession._audioRecorder === undefined || EmblaSession._audioPlayer === undefined) {
+            EmblaSession.prepare()
+        }
     }
 
     /**
-     * Static method to preload required assets.
-     * Minimizes delay when starting a session for the first time.
-     * Call this method once, as early as possible.
+     * Static method to preload required assets
+     * and dynamically import audio/microphone modules.
+     * Call once, as early as possible.
      */
-    static async prepare() {
+    static async prepare(audioRecorderClass?: AudioRecorderStaticInterface, audioPlayerClass?: AudioPlayerStaticInterface) {
+        if (audioRecorderClass === undefined) {
+            EmblaSession._audioRecorder = (await import("./recorder.js")).AudioRecorder;
+        }
+        if (audioPlayerClass === undefined) {
+            EmblaSession._audioPlayer = (await import("./audio.js")).AudioPlayer;
+        }
+
         // Prefetch audio assets
-        await AudioPlayer.init();
+        await EmblaSession._audioPlayer.init();
     }
 
     /**
@@ -135,7 +147,7 @@ export class EmblaSession {
     async cancel() {
         await this.stop();
         if (this._config.audio) {
-            AudioPlayer.playSessionCancel();
+            EmblaSession._audioPlayer.playSessionCancel();
         }
     }
 
@@ -160,7 +172,7 @@ export class EmblaSession {
 
     private async _stop() {
         // Terminate audio recording
-        await AudioRecorder.stop();
+        await EmblaSession._audioRecorder.stop();
 
         // Close WebSocket connection
         if (this._socket !== undefined) {
@@ -184,7 +196,7 @@ export class EmblaSession {
             this._config.onError(errMsg);
         }
 
-        AudioPlayer.playSound("err", this._config.voiceID, this._config.voiceSpeed);
+        EmblaSession._audioPlayer.playSound("err", this._config.voiceID, this._config.voiceSpeed);
     }
 
     private async _openWebSocketConnection() {
@@ -212,7 +224,7 @@ export class EmblaSession {
 
     private async _startStreaming() {
         this.state = EmblaSessionState.streaming;
-        await AudioRecorder.start(
+        await EmblaSession._audioRecorder.start(
             (data: Blob) => {
                 if (this._socket !== undefined) {
                     this._socket.send(data);
@@ -223,7 +235,7 @@ export class EmblaSession {
             }
         );
         if (this._config.audio) {
-            AudioPlayer.playSessionStart();
+            EmblaSession._audioPlayer.playSessionStart();
         }
     }
 
@@ -281,11 +293,11 @@ export class EmblaSession {
         const isFinal: boolean = msg.is_final;
 
         if (isFinal) {
-            await AudioRecorder.stop();
+            await EmblaSession._audioRecorder.stop();
             if (this._config.query) {
                 this.state = EmblaSessionState.answering;
                 if (this._config.audio) {
-                    AudioPlayer.playSessionConfirm();
+                    EmblaSession._audioPlayer.playSessionConfirm();
                 }
             }
         }
@@ -318,7 +330,7 @@ export class EmblaSession {
                 data.valid === false ||
                 data.answer === undefined) {
                 // Handle no answer scenario
-                const dunnoMsg = AudioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
+                const dunnoMsg = EmblaSession._audioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
                 await this.stop();
 
                 if (this._config.onQueryAnswerReceived !== undefined) {
@@ -340,7 +352,7 @@ export class EmblaSession {
             const audioURL = data.audio;
             if (audioURL !== undefined && audioURL !== "") {
                 try {
-                    AudioPlayer.playURL(audioURL);
+                    EmblaSession._audioPlayer.playURL(audioURL);
                 } catch (err) {
                     await this._error(`Error playing audio at URL ${audioURL}: ${err}`);
                 }

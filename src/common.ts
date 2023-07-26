@@ -53,6 +53,18 @@ export const supportedSpeechSynthesisVoices = [
     "Gunnar",
 ];
 
+/** Options for the ASR service. */
+export interface ASROptions {
+    engine?: string,
+    language?: string
+}
+
+/** Options for the TTS service. */
+export interface TTSOptions {
+    voice_id?: string,
+    voice_speed?: number
+}
+
 // Responses from the server
 /** @internal */
 interface ResponseMessage {
@@ -80,4 +92,33 @@ export interface QueryResponseData {
 /** @internal */
 export interface QueryResponseMessage extends ResponseMessage {
     data: QueryResponseData
+}
+
+/**
+ * Interface for audio recording class.
+ */
+export interface AudioRecorderInterface { }
+export interface AudioRecorderStaticInterface {
+    new(): AudioRecorderInterface;
+    isRecording(): Promise<boolean>;
+    start(dataHandler: (data: Blob) => void, errHandler: (error: string) => void): Promise<void>;
+    stop(): Promise<void>;
+}
+
+/**
+ * Interface for audio playing class.
+ */
+export interface AudioPlayerInterface {}
+export interface AudioPlayerStaticInterface {
+    new(): AudioPlayerInterface;
+    init(): Promise<void>;
+    playSessionStart(): void;
+    playSessionConfirm(): void;
+    playSessionCancel(): void;
+    playNoMic(voiceId?: string, playbackSpeed?: number): void;
+    playDunno(voiceId: string, playbackSpeed?: number): string;
+    playSound(soundName: string, voiceId?: string, playbackSpeed?: number): void;
+    playURL(audioURL: string, playbackSpeed?: number): void;
+    stop(): void;
+    speak(text: string, apiKey?: string, ttsOptions?: TTSOptions): Promise<void>;
 }

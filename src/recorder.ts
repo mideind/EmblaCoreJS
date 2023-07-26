@@ -19,7 +19,7 @@
 
 // @ts-ignore // Ignore missing spec file for RecordRTC
 import RecordRTC from "recordrtc";
-import { WAVHeaderLength, audioBitRate, audioNumChannels, audioSampleRate } from "./common.js";
+import { AudioRecorderInterface, AudioRecorderStaticInterface, WAVHeaderLength, audioBitRate, audioNumChannels, audioSampleRate } from "./common.js";
 
 const audioConstraints: MediaTrackConstraints = {
     sampleRate: audioSampleRate,
@@ -47,10 +47,9 @@ const mediaRecorderConfig = {
 /**
  * @summary Class for handling microphone recording & streaming.
  */
-export class AudioRecorder {
+export const AudioRecorder: AudioRecorderStaticInterface = class implements AudioRecorderInterface {
     private static _micRecorder?: RecordRTC.RecordRTCPromisesHandler = undefined;
     private static _stream?: MediaStream = undefined;
-    private constructor() { }
 
     /**
      * Returns true if microphone input is currently being recorded.

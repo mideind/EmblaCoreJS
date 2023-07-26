@@ -17,19 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ASROptions, TTSOptions } from "common.js";
 import { EmblaSessionConfig } from "./config.js";
-
-/** Options for the ASR service. */
-export interface ASROptions {
-    engine?: string,
-    language?: string
-}
-
-/** Options for the TTS service. */
-export interface TTSOptions {
-    voice_id?: string,
-    voice_speed?: number
-}
 
 /** Options for the query service. */
 export interface QueryOptions {

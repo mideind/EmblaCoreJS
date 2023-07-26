@@ -25,7 +25,7 @@
     "url": "https://github.com/mideind/EmblaCoreJS.git"
   },
   "author": "Miðeind <mideind@mideind.is>",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/mideind/EmblaCoreJS/issues"
   },

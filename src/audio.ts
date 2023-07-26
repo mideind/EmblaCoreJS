@@ -18,14 +18,13 @@
  */
 
 import { EmblaAPI } from "api.js";
-import { defaultSpeechSynthesisVoice } from "common.js";
-import { TTSOptions } from "messages.js";
+import { AudioPlayerInterface, AudioPlayerStaticInterface, defaultSpeechSynthesisVoice, TTSOptions } from "common.js";
 import { asciify } from "util.js";
 
 /**
  * Class containing static methods for playing audio and TTS.
  */
-export class AudioPlayer {
+export const AudioPlayer: AudioPlayerStaticInterface = class implements AudioPlayerInterface {
     private static _currAudio?: HTMLAudioElement;
     private static _audioQueue: HTMLAudioElement[] = [];
     private static _fileExtension = "mp3";

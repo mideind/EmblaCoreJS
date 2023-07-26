@@ -53,7 +53,7 @@ export { AudioPlayer } from "./audio.js";
 export { AudioRecorder } from "./recorder.js";
 export { AuthenticationToken } from "./token.js";
 // Interfaces
-export { ASROptions, TTSOptions, QueryOptions } from './messages.js';
-export { GreetingsResponseMessage, ASRResponseMessage, QueryResponseMessage, QueryResponseData } from "./common.js";
+export { QueryOptions } from './messages.js';
+export { ASROptions, TTSOptions, GreetingsResponseMessage, ASRResponseMessage, QueryResponseMessage, QueryResponseData } from "./common.js";
 // Constants
 export { SOFTWARE_VERSION as EmblaCoreVersion } from "./common.js";

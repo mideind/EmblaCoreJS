@@ -18,7 +18,7 @@
  */
 
 import * as common from "./common.js";
-import { TTSOptions, QueryOptions } from "./messages.js";
+import { QueryOptions } from "./messages.js";
 
 
 /**
@@ -65,11 +65,11 @@ export class EmblaAPI {
      * @async
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
-     * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {common.TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
      * @param {string?} serverURL Server URL.
      * @returns URL to speech synthesized audio file.
      */
-    public static async synthesize(text: string, apiKey?: string, ttsOptions?: TTSOptions, serverURL: string = common.defaultServer): Promise<string | undefined> {
+    public static async synthesize(text: string, apiKey?: string, ttsOptions?: common.TTSOptions, serverURL: string = common.defaultServer): Promise<string | undefined> {
         const qargs = {
             "text": text,
             "options": {
