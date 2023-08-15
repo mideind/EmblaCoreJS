@@ -17,10 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ASRResponseMessage, AudioPlayerStaticInterface, AudioRecorderStaticInterface, GreetingsResponseMessage, QueryResponseMessage } from "./common.js";
-import { EmblaSessionConfig } from "./config.js";
-import { GreetingsOutputMessage } from "./messages.js";
-import { capFirst } from "./util.js";
+import type {
+    ASRResponseMessage,
+    AudioPlayer,
+    AudioRecorder,
+    GreetingsResponseMessage,
+    QueryResponseMessage,
+} from "./common";
+import { EmblaSessionConfig } from "./config";
+import { GreetingsOutputMessage } from "./messages";
+import { capFirst } from "./util";
 
 /**
  * Session state.
@@ -37,9 +43,8 @@ export enum EmblaSessionState {
     /** Session has received final ASR result and is answering a query. */
     answering,
     /** Session has finished. */
-    done
+    done,
 }
-
 
 /**
  * @summary Main session object encapsulating Embla's core functionality.
@@ -59,8 +64,8 @@ export enum EmblaSessionState {
  * appropriate flags in the {@link EmblaSessionConfig|configuration object}.
  */
 export class EmblaSession {
-    private static _audioRecorder: AudioRecorderStaticInterface;
-    private static _audioPlayer: AudioPlayerStaticInterface;
+    protected static _audioRecorder: AudioRecorder;
+    protected static _audioPlayer: AudioPlayer;
 
     /** Current state of session object. */
     state: EmblaSessionState = EmblaSessionState.idle;
@@ -74,25 +79,24 @@ export class EmblaSession {
      */
     constructor(cfg: EmblaSessionConfig) {
         this._config = cfg;
-        // Ensure prepare has been called
-        if (EmblaSession._audioRecorder === undefined || EmblaSession._audioPlayer === undefined) {
-            EmblaSession.prepare()
-        }
     }
 
     /**
-     * Static method to preload required assets
-     * and dynamically import audio/microphone modules.
+     * @internal
+     */
+    static async _attachAudioClasses(
+        audioRecorder: new () => AudioRecorder,
+        audioPlayer: new () => AudioPlayer
+    ) {
+        EmblaSession._audioRecorder = new audioRecorder();
+        EmblaSession._audioPlayer = new audioPlayer();
+    }
+
+    /**
+     * Static method to preload required assets.
      * Call once, as early as possible.
      */
-    static async prepare(audioRecorderClass?: AudioRecorderStaticInterface, audioPlayerClass?: AudioPlayerStaticInterface) {
-        if (audioRecorderClass === undefined) {
-            EmblaSession._audioRecorder = (await import("./recorder.js")).AudioRecorder;
-        }
-        if (audioPlayerClass === undefined) {
-            EmblaSession._audioPlayer = (await import("./audio.js")).AudioPlayer;
-        }
-
+    static async prepare() {
         // Prefetch audio assets
         await EmblaSession._audioPlayer.init();
     }
@@ -157,8 +161,8 @@ export class EmblaSession {
      */
     isActive(): boolean {
         return (
-            this.state !== EmblaSessionState.idle
-            && this.state !== EmblaSessionState.done
+            this.state !== EmblaSessionState.idle &&
+            this.state !== EmblaSessionState.done
         );
     }
 
@@ -196,27 +200,34 @@ export class EmblaSession {
             this._config.onError(errMsg);
         }
 
-        EmblaSession._audioPlayer.playSound("err", this._config.voiceID, this._config.voiceSpeed);
+        EmblaSession._audioPlayer.playSound(
+            "err",
+            this._config.voiceID,
+            this._config.voiceSpeed
+        );
     }
 
     private async _openWebSocketConnection() {
         try {
-            const wsUri = new URL(this._config.socketURL);
+            const wsUri = this._config.socketURL;
             this._socket = new WebSocket(wsUri);
 
-            this._socket.onopen = async (_ev: Event) => {
+            this._socket.onopen = async () => {
                 // Send greeting message when connection is opened
-                const greetings = GreetingsOutputMessage.fromConfig(this._config);
+                const greetings = GreetingsOutputMessage.fromConfig(
+                    this._config
+                );
                 this._socket!.send(greetings.toJSON());
                 // Start streaming audio to server
                 await this._startStreaming();
             };
             this._socket.onerror = async (ev: Event) => {
-                await this._error(`Error listening on WebSocket connection: ${ev}`);
+                await this._error(
+                    `Error listening on WebSocket connection: ${ev}`
+                );
             };
 
             this._socket.onmessage = this._createOnMessageHandler();
-
         } catch (err) {
             await this._error(`Error communicating with server: ${err}`);
         }
@@ -225,7 +236,7 @@ export class EmblaSession {
     private async _startStreaming() {
         this.state = EmblaSessionState.streaming;
         await EmblaSession._audioRecorder.start(
-            (data: Blob) => {
+            (data) => {
                 if (this._socket !== undefined) {
                     this._socket.send(data);
                 }
@@ -245,8 +256,8 @@ export class EmblaSession {
      * @internal
      * @returns Message handler function.
      */
-    private _createOnMessageHandler(): ((ev: MessageEvent) => Promise<void>) {
-        return async (ev: MessageEvent<any>) => {
+    private _createOnMessageHandler(): (ev: any) => Promise<void> {
+        return async (ev: any) => {
             try {
                 const msg = JSON.parse(ev.data);
                 switch (msg.type) {
@@ -313,7 +324,7 @@ export class EmblaSession {
 
         // If this is the final ASR result and config has
         // disabled querying, we end the session.
-        if (isFinal && (this._config.query === false)) {
+        if (isFinal && this._config.query === false) {
             await this.stop();
         }
     }
@@ -325,12 +336,17 @@ export class EmblaSession {
 
         try {
             const data = msg.data;
-            if (data === undefined ||
+            if (
+                data === undefined ||
                 data === null ||
                 data.valid === false ||
-                data.answer === undefined) {
+                data.answer === undefined
+            ) {
                 // Handle no answer scenario
-                const dunnoMsg = EmblaSession._audioPlayer.playDunno(this._config.voiceID, this._config.voiceSpeed);
+                const dunnoMsg = EmblaSession._audioPlayer.playDunno(
+                    this._config.voiceID,
+                    this._config.voiceSpeed
+                );
                 await this.stop();
 
                 if (this._config.onQueryAnswerReceived !== undefined) {
@@ -354,7 +370,9 @@ export class EmblaSession {
                 try {
                     EmblaSession._audioPlayer.playURL(audioURL);
                 } catch (err) {
-                    await this._error(`Error playing audio at URL ${audioURL}: ${err}`);
+                    await this._error(
+                        `Error playing audio at URL ${audioURL}: ${err}`
+                    );
                 }
             }
             // End session after audio answer has finished playing
@@ -366,6 +384,7 @@ export class EmblaSession {
     }
 
     toString(): string {
-        return `EmblaSession { state: ${this.state} (${(this.isActive() ? "active" : "inactive")}) }`;
+        let active = this.isActive() ? "active" : "inactive";
+        return `EmblaSession { state: ${this.state} (${active}) }`;
     }
 }

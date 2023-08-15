@@ -17,9 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as common from "./common.js";
-import { QueryOptions } from "./messages.js";
-
+import * as common from "./common";
+import type { QueryOptions } from "./messages";
+import { fetchWithTimeout } from "./util";
 
 /**
  * @summary Class handling communication with HTTP endpoints.
@@ -28,7 +28,7 @@ import { QueryOptions } from "./messages.js";
  * clearing query history and requesting TTS for a given text.
  */
 export class EmblaAPI {
-    private constructor() { }
+    private constructor() {}
 
     /**
      * Send a query to a query service.
@@ -39,7 +39,12 @@ export class EmblaAPI {
      * @param {string?} serverURL Server URL.
      * @return Answer to query.
      */ // @ts-ignore
-    public static async performQuery(query: string, apiKey: string, queryOptions?: QueryOptions, serverURL?: string) {
+    public static async performQuery(
+        _query: string,
+        _apiKey: string,
+        _queryOptions?: QueryOptions,
+        _serverURL?: string
+    ) {
         throw new Error("not implemented");
     }
 
@@ -50,10 +55,15 @@ export class EmblaAPI {
      * @param {boolean} allData Whether all client specific data or only the query history should be deleted server-side.
      * @param {string?} serverURL Server URL.
      */
-    static async clearUserData(clientID: string, apiKey?: string, allData: boolean = false, serverURL: string = common.defaultServer) {
+    static async clearUserData(
+        clientID: string,
+        apiKey?: string,
+        allData: boolean = false,
+        serverURL: string = common.defaultServer
+    ) {
         const qargs = {
-            action: allData ? 'clear_all' : 'clear',
-            client_id: clientID
+            action: allData ? "clear_all" : "clear",
+            client_id: clientID,
         };
 
         const apiURL = `${serverURL}${common.clearHistoryEndpoint}`;
@@ -69,13 +79,21 @@ export class EmblaAPI {
      * @param {string?} serverURL Server URL.
      * @returns URL to speech synthesized audio file.
      */
-    public static async synthesize(text: string, apiKey?: string, ttsOptions?: common.TTSOptions, serverURL: string = common.defaultServer): Promise<string | undefined> {
+    public static async synthesize(
+        text: string,
+        apiKey?: string,
+        ttsOptions?: common.TTSOptions,
+        serverURL: string = common.defaultServer
+    ): Promise<string | undefined> {
         const qargs = {
-            "text": text,
-            "options": {
-                "voice_id": ttsOptions?.voice_id ?? common.defaultSpeechSynthesisVoice,
-                "voice_speed": ttsOptions?.voice_speed?.toString() ?? common.defaultSpeechSynthesisSpeed.toString(),
-            }
+            text: text,
+            options: {
+                voice_id:
+                    ttsOptions?.voice_id ?? common.defaultSpeechSynthesisVoice,
+                voice_speed:
+                    ttsOptions?.voice_speed?.toString() ??
+                    common.defaultSpeechSynthesisSpeed.toString(),
+            },
         };
         const apiURL = `${serverURL}${common.speechSynthesisEndpoint}`;
 
@@ -90,36 +108,23 @@ export class EmblaAPI {
      * @param qargs JSON body to send in request.
      * @returns JSON response.
      */
-    private static async _makePOSTRequest(apiURL: string, apiKey?: string, qargs?: any): Promise<any> {
-        try {
-            const response = await fetch(
-                new URL(apiURL),
-                {
-                    method: "POST",
-                    headers: {
-                        "X-API-KEY": apiKey ?? "",
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify(qargs),
-                    signal: AbortSignal.timeout(common.requestTimeout)
-                }
-            );
-            if (response.status < 200 || response.status >= 300) {
-                return undefined;
-            }
-            // Parse JSON body and return
-            return await response.json();
-        } catch (e) {
-            // NOTE: the following cast is unsafe,
-            // JS can raise other things than Errors
-            const err = e as Error;
-            if (err.name === "TimeoutError") {
-                console.debug("Timed out while making POST request");
-            } else {
-                console.debug(`Error during POST request: ${err.name}, ${err.message}`);
-            }
-            return undefined;
-        }
+    private static async _makePOSTRequest(
+        apiURL: string,
+        apiKey?: string,
+        qargs?: any
+    ): Promise<any> {
+        return await fetchWithTimeout(
+            apiURL,
+            {
+                method: "POST",
+                headers: {
+                    "X-API-KEY": apiKey ?? "",
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                body: JSON.stringify(qargs),
+            },
+            common.requestTimeout
+        );
     }
 }

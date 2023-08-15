@@ -17,17 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ASROptions, TTSOptions } from "common.js";
-import { EmblaSessionConfig } from "./config.js";
+import type { ASROptions, TTSOptions } from "./common";
+import type { EmblaSessionConfig } from "./config";
 
 /** Options for the query service. */
 export interface QueryOptions {
-    url?: string,
-    client_id?: string,
-    client_type?: string,
-    client_version?: string,
-    latitude?: number,
-    longitude?: number,
+    url?: string;
+    client_id?: string;
+    client_type?: string;
+    client_version?: string;
+    latitude?: number;
+    longitude?: number;
 }
 
 /**
@@ -35,12 +35,12 @@ export interface QueryOptions {
  * greetings message to the server.
  */
 export interface GreetingsData {
-    private: boolean,
-    asr_options?: ASROptions,
-    query: boolean,
-    query_options?: QueryOptions,
-    tts: boolean,
-    tts_options?: TTSOptions,
+    private: boolean;
+    asr_options?: ASROptions;
+    query: boolean;
+    query_options?: QueryOptions;
+    tts: boolean;
+    tts_options?: TTSOptions;
 }
 
 /** Class representing a `greetings` JSON message sent to the server */
@@ -50,10 +50,7 @@ export class GreetingsOutputMessage {
     /**
      * @internal
      */
-    constructor(
-        protected token: string,
-        public data: GreetingsData
-    ) { }
+    constructor(protected token: string, public data: GreetingsData) {}
 
     /**
      * Create a greetings message from a session config object.
@@ -101,28 +98,28 @@ export class GreetingsOutputMessage {
 
         let data: GreetingsData = {
             // Privacy setting
-            "private": config.privateMode,
+            private: config.privateMode,
             // ASR options
-            "asr_options": asrOpts,
+            asr_options: asrOpts,
             // Query options
-            "query": config.query,
-            "query_options": qOpts,
+            query: config.query,
+            query_options: qOpts,
             // TTS options
-            "tts": config.tts,
-            "tts_options": ttsOpts,
-        }
+            tts: config.tts,
+            tts_options: ttsOpts,
+        };
 
         // Token
         let token = config.token ?? "";
-        return new GreetingsOutputMessage(token = token, data = data);
+        return new GreetingsOutputMessage((token = token), (data = data));
     }
 
     /** Convert this message object to a JSON string representation. */
     toJSON(): string {
         const msg = {
-            "type": this.type,
-            "token": this.token,
-            "data": this.data
+            type: this.type,
+            token: this.token,
+            data: this.data,
         };
         return JSON.stringify(msg);
     }
