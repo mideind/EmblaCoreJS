@@ -19,16 +19,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-
-      - name: Run install
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: install
-      - name: Build production bundle
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: prepack
-      - name: Test the app
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: test
+      - run: npm ci
+      - run: npm run prepack
+      - run: npm run test
