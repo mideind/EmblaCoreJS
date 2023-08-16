@@ -199,12 +199,13 @@ export class EmblaSession {
         if (this._config.onError !== undefined) {
             this._config.onError(errMsg);
         }
-
-        EmblaSession._audioPlayer.playSound(
-            "err",
-            this._config.voiceID,
-            this._config.voiceSpeed
-        );
+        if (this._config.audio) {
+            EmblaSession._audioPlayer.playSound(
+                "err",
+                this._config.voiceID,
+                this._config.voiceSpeed
+            );
+        }
     }
 
     private async _openWebSocketConnection() {
@@ -342,11 +343,15 @@ export class EmblaSession {
                 data.valid === false ||
                 data.answer === undefined
             ) {
-                // Handle no answer scenario
-                const dunnoMsg = EmblaSession._audioPlayer.playDunno(
-                    this._config.voiceID,
-                    this._config.voiceSpeed
-                );
+                // TODO: Select dunno string without playing sound
+                let dunnoMsg: string = "Því miður veit ég það ekki.";
+                if (this._config.audio) {
+                    // Handle no answer scenario
+                    dunnoMsg = EmblaSession._audioPlayer.playDunno(
+                        this._config.voiceID,
+                        this._config.voiceSpeed
+                    );
+                }
                 await this.stop();
 
                 if (this._config.onQueryAnswerReceived !== undefined) {
@@ -368,7 +373,9 @@ export class EmblaSession {
             const audioURL = data.audio;
             if (audioURL !== undefined && audioURL !== "") {
                 try {
-                    EmblaSession._audioPlayer.playURL(audioURL);
+                    if (this._config.audio) {
+                        EmblaSession._audioPlayer.playURL(audioURL);
+                    }
                 } catch (err) {
                     await this._error(
                         `Error playing audio at URL ${audioURL}: ${err}`
