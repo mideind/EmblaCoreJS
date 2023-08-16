@@ -1,4 +1,4 @@
-import * as EmblaCore from "./emblacore.js";
+import * as EmblaCore from "@mideind/embla-core";
 
 const apiKeyInput = document.getElementById("server_api_key");
 

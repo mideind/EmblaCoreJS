@@ -13,6 +13,18 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./img/icon_32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="./img/icon_16.png">
 
+    <!-- Example of using jsDelivr to fetch a specific release of EmblaCoreJS. 
+        Change library version from 'X.Y.Z' before using! -->
+    <!-- <script type="importmap">
+        {"imports":{"@mideind/embla-core": "https://cdn.jsdelivr.net/npm/@mideind/embla-core@X.Y.Z/lib/web/emblacore.min.js"}}
+    </script> -->
+
+    <!-- Import map maps "@mideind/embla-core" to file in local directory. -->
+    <script type="importmap">
+        {"imports":{"@mideind/embla-core": "./emblacore.js"}}
+    </script>
+
+    <!-- Main module simply imports from "@mideind/embla-core" -->
     <script type="module" src="./main.js"></script>
 </head>
 
