@@ -1,6 +1,6 @@
 {
-  "name": "embla-core-js",
-  "version": "1.0.0",
+  "name": "@mideind/embla-core",
+  "version": "0.2.0",
   "description": "Core Embla functionality ported to TypeScript/JavaScript.",
   "main": "lib/react-native/emblacore.min.js",
   "react-native": "lib/react-native/emblacore.min.js",
@@ -29,7 +29,10 @@
     "android",
     "web"
   ],
-  "repository": "https://github.com/mideind/EmblaCoreJS",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mideind/EmblaCoreJS.git"
+  },
   "author": "Miðeind ehf. <mideind@mideind.is> (https://github.com/mideind)",
   "license": "GPL-3.0-or-later",
   "bugs": {
@@ -110,5 +113,9 @@
     "tabWidth": 4,
     "trailingComma": "es5",
     "useTabs": false
+  },
+  "directories": {
+    "example": "example",
+    "lib": "lib"
   }
 }

@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native';
 
-import * as EmblaCore from 'embla-core-js';
+import * as EmblaCore from '@mideind/embla-core';
 import {PERMISSIONS, request} from 'react-native-permissions';
 
 // Call prepare, once, early
@@ -64,7 +64,7 @@ function EmblaButton(): JSX.Element {
 
   // Set up config for Embla
   let config = new EmblaCore.EmblaSessionConfig(
-    undefined, // In most cases this should be a custom function which handles retrieving auth tokens
+    undefined,
     'http://192.168.1.208:8080', // Set URL for the Ratatoskur instance or use the default
   );
   config.apiKey = ''; // Set Ratatoskur API key

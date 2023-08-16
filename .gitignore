@@ -70,4 +70,4 @@ android/keystores/debug.keystore
 lib/
 docs/
 dist/
-embla-core-*.tgz
+*embla*.tgz
