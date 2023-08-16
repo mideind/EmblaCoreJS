@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@dr.pogodin/react-native-audio": "^1.5.0",
-    "@mideind/embla-core": "file:../../mideind-embla-core-0.2.0.tgz",
+    "@mideind/embla-core": "file:../../mideind-embla-core-0.2.1.tgz",
     "react": "18.2.0",
     "react-native": "0.72.4",
     "react-native-permissions": "^3.8.4",
