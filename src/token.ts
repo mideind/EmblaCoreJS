@@ -21,17 +21,13 @@
  * Authentication token object required to start a WebSocket session.
  */
 export class AuthenticationToken {
-
     /**
      * Constructor used internally. Use {@link AuthenticationToken.fromJson} instead.
      * @internal
      * @param tokenString Authentication token.
      * @param expiresAt Expiration timestamp.
      */
-    constructor(
-        public tokenString: string,
-        public expiresAt: Date
-    ) { }
+    constructor(public tokenString: string, public expiresAt: Date) {}
 
     /**
      * Create an AuthenticationToken from JSON string data.

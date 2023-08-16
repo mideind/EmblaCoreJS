@@ -17,8 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as common from "./common.js";
-import { AuthenticationToken } from "./token.js";
+import * as common from "./common";
+import { AuthenticationToken } from "./token";
+import { fetchWithTimeout } from "./util";
 
 /**
  * @summary EmblaSession configuration object.
@@ -38,8 +39,10 @@ export class EmblaSessionConfig {
      * @param fetchToken Optional, but recommended, async function which fetches authentication tokens for WebSocket communication.
      * @param {string} server Optional, specify non-default server for session to communicate with.
      */
-    constructor(fetchToken?: (() => Promise<AuthenticationToken | undefined>), server: string = common.defaultServer) {
-
+    constructor(
+        fetchToken?: () => Promise<AuthenticationToken | undefined>,
+        server: string = common.defaultServer
+    ) {
         // If fetchToken is specified, we use that function to fetch tokens.
         this.tokenFetcher = fetchToken;
 
@@ -49,8 +52,10 @@ export class EmblaSessionConfig {
         if (webSocketURL.startsWith("https")) {
             // We're using SSL, so we need to use wss://
             webSocketURL = webSocketURL.replace("https", "wss");
-        } else {
+        } else if (webSocketURL.startsWith("http")) {
             webSocketURL = webSocketURL.replace("http", "ws");
+        } else {
+            throw new Error("URL doesn't specify protocol.");
         }
         this.socketURL = `${webSocketURL}${common.socketEndpoint}`;
     }
@@ -59,7 +64,7 @@ export class EmblaSessionConfig {
      * If defined, used as function to fetch authentication tokens for WebSocket communication.
      * This allows the authentication process to be proxied.
      */
-    tokenFetcher?: (() => Promise<AuthenticationToken | undefined>)
+    tokenFetcher?: () => Promise<AuthenticationToken | undefined>;
 
     /**
      * URL for server API endpoint which provides authentication tokens.
@@ -155,7 +160,11 @@ export class EmblaSessionConfig {
      * speech text from the server.
      * @group Event Handlers
      */
-    onSpeechTextReceived?: (transcript: string, isFinal: boolean, msg: common.ASRResponseMessage) => void;
+    onSpeechTextReceived?: (
+        transcript: string,
+        isFinal: boolean,
+        msg: common.ASRResponseMessage
+    ) => void;
     /**
      * Called when the session has received *final* speech text
      * from the server and is waiting for a query answer.
@@ -186,7 +195,6 @@ export class EmblaSessionConfig {
      * @group Event Handlers
      */
     onError?: (error: string) => void;
-
 
     /**
      * WebSocket token for authenticated communication with the server.
@@ -219,7 +227,10 @@ export class EmblaSessionConfig {
      * @async
      */
     async fetchToken(): Promise<void> {
-        if (EmblaSessionConfig._token !== undefined && !EmblaSessionConfig._token.isExpired()) {
+        if (
+            EmblaSessionConfig._token !== undefined &&
+            !EmblaSessionConfig._token.isExpired()
+        ) {
             return;
         }
 
@@ -231,25 +242,16 @@ export class EmblaSessionConfig {
         // We either haven't gotten a token yet, or the one we
         // have has expired, so we fetch a new one.
         const timeout = 5e3; // milliseconds
-        try {
-            const response = await fetch(
-                new URL(this._tokenURL),
-                {
-                    headers: { "X-API-Key": this.apiKey ?? "" },
-                    signal: AbortSignal.timeout(timeout)
-                }
+        let body = await fetchWithTimeout(
+            this._tokenURL,
+            { headers: { "X-API-Key": this.apiKey ?? "" } },
+            timeout
+        );
+        if (body !== undefined) {
+            EmblaSessionConfig._token = AuthenticationToken.fromJson(
+                JSON.stringify(body) // TODO: Fix unnecessary serialization
             );
-
-            EmblaSessionConfig._token = AuthenticationToken.fromJson(await response.text());
-        } catch (e) {
-            // NOTE: the following cast is unsafe,
-            // JS can raise other things than Errors
-            const err = e as Error;
-            if (err.name === "TimeoutError") {
-                console.debug("Timed out while fetching token");
-            } else {
-                console.debug(`Error while fetching WebSocket token: ${err.name}, ${err.message}`);
-            }
+        } else {
             EmblaSessionConfig._token = undefined;
         }
     }

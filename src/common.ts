@@ -48,77 +48,110 @@ export const WAVHeaderLength = 44;
 // Speech synthesis
 export const defaultSpeechSynthesisSpeed = 1.0;
 export const defaultSpeechSynthesisVoice = "Guðrún";
-export const supportedSpeechSynthesisVoices = [
-    "Guðrún",
-    "Gunnar",
-];
+export const supportedSpeechSynthesisVoices = ["Guðrún", "Gunnar"];
 
 /** Options for the ASR service. */
 export interface ASROptions {
-    engine?: string,
-    language?: string
+    engine?: string;
+    language?: string;
 }
 
 /** Options for the TTS service. */
 export interface TTSOptions {
-    voice_id?: string,
-    voice_speed?: number
+    voice_id?: string;
+    voice_speed?: number;
 }
 
 // Responses from the server
 /** @internal */
 interface ResponseMessage {
-    type: string,
-    code: number
+    type: string;
+    code: number;
 }
 /** @internal */
 export interface GreetingsResponseMessage extends ResponseMessage {
-    info: object
+    info: object;
 }
 /** @internal */
 export interface ASRResponseMessage extends ResponseMessage {
-    transcript: string,
-    is_final: boolean,
-    alternatives: [string]
+    transcript: string;
+    is_final: boolean;
+    alternatives: [string];
 }
 /**
  * Response data from the query server.
  */
 export interface QueryResponseData {
-    valid: boolean,
-    answer?: string,
-    audio?: string,
+    valid: boolean;
+    answer?: string;
+    audio?: string;
 }
 /** @internal */
 export interface QueryResponseMessage extends ResponseMessage {
-    data: QueryResponseData
+    data: QueryResponseData;
 }
 
 /**
  * Interface for audio recording class.
  */
-export interface AudioRecorderInterface { }
-export interface AudioRecorderStaticInterface {
-    new(): AudioRecorderInterface;
+export interface AudioRecorder {
     isRecording(): Promise<boolean>;
-    start(dataHandler: (data: Blob) => void, errHandler: (error: string) => void): Promise<void>;
+    start(
+        dataHandler: (
+            data: Blob | ArrayBuffer | Uint16Array | DataView
+        ) => void,
+        errHandler: (error: string) => void
+    ): Promise<void>;
     stop(): Promise<void>;
 }
 
 /**
  * Interface for audio playing class.
  */
-export interface AudioPlayerInterface {}
-export interface AudioPlayerStaticInterface {
-    new(): AudioPlayerInterface;
+export interface AudioPlayer {
+    /**
+     * Pre-fetch audio assets.
+     * @async
+     */
     init(): Promise<void>;
     playSessionStart(): void;
     playSessionConfirm(): void;
     playSessionCancel(): void;
     playNoMic(voiceId?: string, playbackSpeed?: number): void;
     playDunno(voiceId: string, playbackSpeed?: number): string;
-    playSound(soundName: string, voiceId?: string, playbackSpeed?: number): void;
+    /**
+     * Play a specific sound. Some sounds are dependent on TTS settings.
+     * @param {string} soundName Name of sound to play.
+     * @param {string?} voiceId Selected TTS voice (if applicable).
+     * @param {number?} playbackSpeed Selected TTS speed.
+     */
+    playSound(
+        soundName: string,
+        voiceId?: string,
+        playbackSpeed?: number
+    ): void;
+    /**
+     * Play sound fetched from a URL.
+     * @param {string} audioURL URL to audio file for playing.
+     * @param {number?} playbackSpeed Playback speed/rate.
+     */
     playURL(audioURL: string, playbackSpeed?: number): void;
+    /**
+     * Stop playing sound.
+     */
     stop(): void;
-    speak(text: string, apiKey?: string, ttsOptions?: TTSOptions): Promise<void>;
+    /**
+     * Request speech synthesis of the given text. Returns audio URL.
+     * @async
+     * @param {string} text Text to speech synthesize.
+     * @param {string?} apiKey Server API key.
+     * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @throws {Error} If TTS service returned no audio.
+     * @returns URL to speech synthesized audio file.
+     */
+    speak(
+        text: string,
+        apiKey?: string,
+        ttsOptions?: TTSOptions
+    ): Promise<void>;
 }

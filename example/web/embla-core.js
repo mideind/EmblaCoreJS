@@ -1,0 +1,1 @@
+../../lib/web/embla-core.min.js

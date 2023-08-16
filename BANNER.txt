@@ -18,9 +18,10 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-Dependencies:
 <% _.forEach(dependencies, function (dependency) { %>
-  EmblaCoreJS uses <%= dependency.name %> version <%= dependency.version %>, which is Copyright (c) <%= dependency.author.name %> <%= dependency.author.email %>
-  <%= dependency.name %> is released under the <%= dependency.license %> license.
-  Homepage of <%= dependency.name %>: <%= dependency.homepage %>
+  EmblaCoreJS bundles the following library: <%= dependency.name %>, version <%= dependency.version %>, which is Copyright (c) <%= dependency.author.name %> <%= dependency.author.email %>
+  Homepage: <%= dependency.homepage %>
+  Repository: <%= dependency.repository.url %>
+  <%= dependency.name %> is released under the <%= dependency.license %> license:
+    <%= dependency.licenseText %>
 <% }) %>
