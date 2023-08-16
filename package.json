@@ -2,11 +2,11 @@
   "name": "@mideind/embla-core",
   "version": "0.2.0",
   "description": "Core Embla functionality ported to TypeScript/JavaScript.",
-  "main": "lib/react-native/emblacore.min.js",
-  "react-native": "lib/react-native/emblacore.min.js",
-  "module": "lib/web/emblacore.min.js",
-  "browser": "lib/web/emblacore.min.js",
-  "types": "lib/types/embla-core-js.d.ts",
+  "main": "lib/react-native/embla-core.min.js",
+  "react-native": "lib/react-native/embla-core.min.js",
+  "module": "lib/web/embla-core.min.js",
+  "browser": "lib/web/embla-core.min.js",
+  "types": "lib/types/embla-core.d.ts",
   "files": [
     "src",
     "lib",
@@ -20,7 +20,7 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "docs": "typedoc src/index.web.ts --name EmblaCoreJS",
+    "docs": "typedoc src/index.web.ts --tsconfig tsconfig.web.json",
     "prepack": "rollup -c"
   },
   "keywords": [
@@ -62,6 +62,7 @@
     "rollup-plugin-dts": "^5.3.1",
     "rollup-plugin-license": "^3.0.1",
     "rollup-plugin-typescript2": "^0.35.0",
+    "typedoc": "^0.24.8",
     "typescript": "^5.0.2"
   },
   "resolutions": {

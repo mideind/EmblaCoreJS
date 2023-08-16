@@ -20,12 +20,12 @@ export default [
         input: WEB_ENTRY,
         output: [
             {
-                file: `${WEB_OUT_DIR}/emblacore.js`,
+                file: `${WEB_OUT_DIR}/embla-core.js`,
                 name: NAME,
                 format: "es",
             },
             {
-                file: `${WEB_OUT_DIR}/emblacore.min.js`,
+                file: `${WEB_OUT_DIR}/embla-core.min.js`,
                 name: NAME,
                 format: "es",
                 plugins: [
@@ -74,16 +74,12 @@ export default [
         ],
         output: [
             {
-                file: `${RN_OUT_DIR}/emblacore.js`,
+                file: `${RN_OUT_DIR}/embla-core.js`,
                 name: NAME,
-                // globals: {
-                //     "react": "React",
-                //     "react-native": "reactNative",
-                // },
                 format: "es",
             },
             {
-                file: `${RN_OUT_DIR}/emblacore.min.js`,
+                file: `${RN_OUT_DIR}/embla-core.min.js`,
                 name: NAME,
                 format: "es",
                 plugins: [
@@ -122,7 +118,7 @@ export default [
     {
         // Declaration files
         input: `${RN_OUT_DIR}/src/index.native.d.ts`,
-        output: [{ file: "lib/types/embla-core-js.d.ts", format: "es" }],
+        output: [{ file: "lib/types/embla-core.d.ts", format: "es" }],
         plugins: [dts()],
     },
 ];

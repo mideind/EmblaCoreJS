@@ -57,7 +57,7 @@ Documentation is then found in `docs/` (open `docs/index.html` in a browser).
 Tests can be run with:
 
 ```bash
-yarn run test
+npm run test
 ```
 
 ## Example usage

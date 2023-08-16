@@ -22,7 +22,7 @@
  * @example
  * Simple example of usage:
  * ```js
- * import * as EmblaCore from emblacore.js
+ * import * as EmblaCore from "@mideind/embla-core"
  *
  * // Set up an `EmblaSessionConfig` instance, optionally specifying a proxy token fetching method.
  * // (For the sake of brevity, here we simply set the API key and use the default token fetching)
