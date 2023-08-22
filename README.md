@@ -2,6 +2,7 @@
 [![Language](https://img.shields.io/badge/language-javascript-yellow)]()
 [![Release](https://shields.io/github/v/release/mideind/EmblaCoreJS?display_name=tag)]()
 [![Build](https://github.com/mideind/EmblaCoreJS/actions/workflows/main.yml/badge.svg)]()
+[![NPM](https://img.shields.io/npm/v/@mideind/embla-core.svg?logo=npm)](https://www.npmjs.com/package/@mideind/embla-core)
 
 <img src="./img/emblacore_icon.png" align="right" width="200" height="200" style="margin-left:20px;">
 
