@@ -59,17 +59,14 @@ export class GreetingsOutputMessage {
      */
     static fromConfig(config: EmblaSessionConfig): GreetingsOutputMessage {
         // Engine options
-        const asrOpts: ASROptions = {};
-        if (config.engine !== undefined) {
-            asrOpts.engine = config.engine;
-        }
-        // Unused
-        // if (config.language !== undefined) {
-        //     engineOpts.language = config.language;
-        // }
+        const asrOpts: ASROptions = {
+            engine: config.engine,
+            language: config.language,
+        };
 
         // Query options, which includes client details.
         const qOpts: QueryOptions = {};
+
         qOpts.url = `${config.queryServer}/query.api`;
         if (config.privateMode === false) {
             // Client details are only sent if the session is not private.
@@ -91,10 +88,11 @@ export class GreetingsOutputMessage {
             }
         }
 
-        const ttsOpts: TTSOptions = {};
-        // Speech synthesis settings
-        ttsOpts.voice_id = config.voiceID;
-        ttsOpts.voice_speed = config.voiceSpeed;
+        // Query server TTS settings
+        const ttsOpts: TTSOptions = {
+            voice_id: config.voiceID,
+            voice_speed: config.voiceSpeed,
+        };
 
         let data: GreetingsData = {
             // Privacy setting

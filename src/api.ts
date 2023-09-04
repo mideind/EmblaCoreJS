@@ -17,14 +17,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: Implement querying
+
 import * as common from "./common";
 import type { QueryOptions } from "./messages";
 import { fetchWithTimeout } from "./util";
 
+type _clearUserDataArgs = {
+    action: "clear_all" | "clear";
+    client_id: string;
+    // Allow other attributes without type errors
+    [attr: string]: unknown;
+};
+type _synthesizeArgs = {
+    text: string;
+    tts_options?: common.SpeechOptions;
+    transcribe?: boolean;
+    transcription_options?: common.TranscriptionOptions;
+    [attr: string]: unknown;
+};
+type _synthesizeReturn = {
+    audio_url: string;
+    text: string;
+    [attr: string]: unknown;
+};
+
 /**
  * @summary Class handling communication with HTTP endpoints.
  * @remarks
- * Has methods for performing queries (_not implemented yet_),
+ * Has methods for performing queries,
  * clearing query history and requesting TTS for a given text.
  */
 export class EmblaAPI {
@@ -61,7 +82,7 @@ export class EmblaAPI {
         allData: boolean = false,
         serverURL: string = common.defaultServer
     ) {
-        const qargs = {
+        const qargs: _clearUserDataArgs = {
             action: allData ? "clear_all" : "clear",
             client_id: clientID,
         };
@@ -75,29 +96,35 @@ export class EmblaAPI {
      * @async
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
-     * @param {common.TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {common.SpeechOptions?} ttsOptions Options for speech synthesis.
+     * @param {boolean?} transcribe Whether to phonetically transcribe text before TTS (only for Icelandic voices).
+     * @param {common.TranscriptionOptions?} transcriptionOptions Options for transcription (only for Icelandic voices).
      * @param {string?} serverURL Server URL.
      * @returns URL to speech synthesized audio file.
      */
     public static async synthesize(
         text: string,
         apiKey?: string,
-        ttsOptions?: common.TTSOptions,
+        ttsOptions?: common.SpeechOptions,
+        transcriptionOptions?: common.TranscriptionOptions,
+        transcribe: boolean = true,
         serverURL: string = common.defaultServer
     ): Promise<string | undefined> {
-        const qargs = {
-            text: text,
-            options: {
-                voice_id:
-                    ttsOptions?.voice_id ?? common.defaultSpeechSynthesisVoice,
-                voice_speed:
-                    ttsOptions?.voice_speed?.toString() ??
-                    common.defaultSpeechSynthesisSpeed.toString(),
-            },
-        };
+        const qargs: _synthesizeArgs = { text: text, transcribe: transcribe };
+        if (ttsOptions) {
+            qargs.tts_options = ttsOptions;
+        }
+        if (transcriptionOptions) {
+            qargs.transcription_options = transcriptionOptions;
+        }
+
         const apiURL = `${serverURL}${common.speechSynthesisEndpoint}`;
 
-        const body = await this._makePOSTRequest(apiURL, apiKey, qargs);
+        const body: _synthesizeReturn = await this._makePOSTRequest(
+            apiURL,
+            apiKey,
+            qargs
+        );
         return body.audio_url;
     }
 

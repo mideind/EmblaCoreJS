@@ -83,10 +83,9 @@ export class EmblaSessionConfig {
      */
     apiKey?: string;
     /**
-     * Speech-to-text language (e.g. `is-IS`).
-     * Currently only `is-IS` is supported.
+     * Speech-to-text language (e.g. `is-IS`, `en_-US`, ...).
      */
-    language: string = common.speechToTextLanguage;
+    language: string = "is-IS";
     /** Override default ASR engine. */
     engine?: string;
     /**
@@ -96,7 +95,7 @@ export class EmblaSessionConfig {
     /**
      * Voice speed to use when synthesizing speech.
      */
-    voiceSpeed: number = common.defaultSpeechSynthesisSpeed;
+    voiceSpeed?: number;
     /** Don't send client info to server.
      * @defaultValue `false`, set to `true` to not send client info to server.
      */
