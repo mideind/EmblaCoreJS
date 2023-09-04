@@ -21,7 +21,7 @@ import { EmblaAPI } from "./api";
 import {
     type AudioPlayer,
     defaultSpeechSynthesisVoice,
-    type TTSOptions,
+    type SpeechOptions,
 } from "./common";
 import { asciify } from "./util";
 
@@ -170,11 +170,11 @@ export class WebAudioPlayer implements AudioPlayer {
      * @async
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
-     * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {SpeechOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
      * @throws {Error} If TTS service returned no audio.
      * @returns URL to speech synthesized audio file.
      */
-    async speak(text: string, apiKey?: string, ttsOptions?: TTSOptions) {
+    async speak(text: string, apiKey?: string, ttsOptions?: SpeechOptions) {
         const audioURL = await EmblaAPI.synthesize(text, apiKey, ttsOptions);
         if (audioURL === undefined) {
             throw new Error("Error during speech synthesis");

@@ -173,13 +173,13 @@ export interface AudioPlayer {
      * @async
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
-     * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {SpeechOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
      * @throws {Error} If TTS service returned no audio.
      * @returns URL to speech synthesized audio file.
      */
     speak(
         text: string,
         apiKey?: string,
-        ttsOptions?: TTSOptions
+        ttsOptions?: SpeechOptions
     ): Promise<void>;
 }

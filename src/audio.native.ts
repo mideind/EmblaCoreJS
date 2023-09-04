@@ -1,4 +1,4 @@
-import type { AudioPlayer, TTSOptions } from "./common";
+import type { AudioPlayer, SpeechOptions } from "./common";
 import { EmblaAPI } from "./api";
 import { asciify } from "./util";
 import SoundPlayer from "react-native-sound-player";
@@ -112,7 +112,7 @@ export class RNAudioPlayer implements AudioPlayer {
         SoundPlayer.stop();
     }
 
-    async speak(text: string, apiKey?: string, ttsOptions?: TTSOptions) {
+    async speak(text: string, apiKey?: string, ttsOptions?: SpeechOptions) {
         const audioURL = await EmblaAPI.synthesize(text, apiKey, ttsOptions);
         if (audioURL === undefined) {
             throw new Error("Error during speech synthesis");
