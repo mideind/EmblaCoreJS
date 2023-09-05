@@ -173,13 +173,17 @@ export interface AudioPlayer {
      * @async
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
-     * @param {SpeechOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {SpeechOptions?} ttsOptions Options for speech synthesis.
+     * @param {TranscriptionOptions?} transcriptionOptions Options for transcription (only for Icelandic voices).
+     * @param {boolean?} transcribe Whether to phonetically transcribe text before TTS (only for Icelandic voices).
      * @throws {Error} If TTS service returned no audio.
      * @returns URL to speech synthesized audio file.
      */
     speak(
         text: string,
         apiKey?: string,
-        ttsOptions?: SpeechOptions
+        ttsOptions?: SpeechOptions,
+        transcriptionOptions?: TranscriptionOptions,
+        transcribe?: boolean
     ): Promise<void>;
 }

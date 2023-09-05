@@ -97,8 +97,8 @@ export class EmblaAPI {
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
      * @param {common.SpeechOptions?} ttsOptions Options for speech synthesis.
-     * @param {boolean?} transcribe Whether to phonetically transcribe text before TTS (only for Icelandic voices).
      * @param {common.TranscriptionOptions?} transcriptionOptions Options for transcription (only for Icelandic voices).
+     * @param {boolean?} transcribe Whether to phonetically transcribe text before TTS (only for Icelandic voices).
      * @param {string?} serverURL Server URL.
      * @returns URL to speech synthesized audio file.
      */
