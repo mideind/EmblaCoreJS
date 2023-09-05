@@ -51,10 +51,22 @@ const DUNNO_STRINGS: { [key: string]: string } = {
     dunno07: "Því miður veit ég það ekki.",
 };
 
+export function RNAudioSetup() {
+    // Circumvent bug on iOS:
+    // https://github.com/johnsonsu/react-native-sound-player/issues/8
+    const onFinishedLoading = SoundPlayer.addEventListener(
+        "FinishedLoadingURL",
+        (_success) => {
+            console.log("loaded url");
+        }
+    );
+    return () => onFinishedLoading.remove();
+}
+
 export class RNAudioPlayer implements AudioPlayer {
     private _fileExt = "mp3";
     private _audioURL = "https://embla.is/assets/audio";
-    async init(): Promise<void> {
+    async init(): Promise<any> {
         // AUDIO_FILES.forEach((name) => {
         //     console.log(name);
         //     // SoundPlayer.loadSoundFile(name, AUDIO_EXTENSION);

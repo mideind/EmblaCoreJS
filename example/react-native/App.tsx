@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Platform,
   Pressable,
@@ -21,9 +21,6 @@ import {
 import * as EmblaCore from '@mideind/embla-core';
 import {PERMISSIONS, request} from 'react-native-permissions';
 
-// Call prepare, once, early
-EmblaCore.EmblaSession.prepare();
-
 const BaseColors = {
   dark_bg: 'dimgray',
   light_bg: 'floralwhite',
@@ -32,6 +29,13 @@ const BaseColors = {
   dark_fg: 'ghostwhite',
   light_fg: 'darkred',
 };
+// Ratatoskur instance to communicate with.
+const RATATOSKUR_URL = 'http://192.168.1.208:8080';
+// const RATATOSKUR_URL = 'https://api.greynir.is';
+// Ratatoskur API key
+const RATATOSKUR_API_KEY = '<your api key here>';
+// If desired, custom implementation for requesting tokens from Ratatoskur
+const customTokenFetcher = undefined;
 
 async function reqPerms() {
   await request(
@@ -40,11 +44,14 @@ async function reqPerms() {
       : PERMISSIONS.ANDROID.RECORD_AUDIO,
   ).then(result => {
     console.log('Microphone permission status: ', result);
-    // setPermissionResult(result);
   });
 }
 
 function EmblaButton(): JSX.Element {
+  useEffect(() => {
+    EmblaCore.EmblaSession.prepare();
+    return EmblaCore.RNAudioSetup();
+  }, []);
   reqPerms();
   const isDarkMode = useColorScheme() === 'dark';
   const colors = {
@@ -64,10 +71,10 @@ function EmblaButton(): JSX.Element {
 
   // Set up config for Embla
   let config = new EmblaCore.EmblaSessionConfig(
-    undefined,
-    'http://192.168.1.208:8080', // Set URL for the Ratatoskur instance or use the default
+    customTokenFetcher,
+    RATATOSKUR_URL,
   );
-  config.apiKey = ''; // Set Ratatoskur API key
+  config.apiKey = RATATOSKUR_API_KEY;
   console.log(config);
 
   config.onStartStreaming = () => {
