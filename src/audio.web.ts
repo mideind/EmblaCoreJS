@@ -21,7 +21,8 @@ import { EmblaAPI } from "./api";
 import {
     type AudioPlayer,
     defaultSpeechSynthesisVoice,
-    type TTSOptions,
+    type SpeechOptions,
+    type TranscriptionOptions,
 } from "./common";
 import { asciify } from "./util";
 
@@ -170,12 +171,26 @@ export class WebAudioPlayer implements AudioPlayer {
      * @async
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
-     * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {SpeechOptions?} ttsOptions Options for speech synthesis.
+     * @param {TranscriptionOptions?} transcriptionOptions Options for transcription (only for Icelandic voices).
+     * @param {boolean?} transcribe Whether to phonetically transcribe text before TTS (only for Icelandic voices).
      * @throws {Error} If TTS service returned no audio.
      * @returns URL to speech synthesized audio file.
      */
-    async speak(text: string, apiKey?: string, ttsOptions?: TTSOptions) {
-        const audioURL = await EmblaAPI.synthesize(text, apiKey, ttsOptions);
+    async speak(
+        text: string,
+        apiKey?: string,
+        ttsOptions?: SpeechOptions,
+        transcriptionOptions?: TranscriptionOptions,
+        transcribe?: boolean
+    ) {
+        const audioURL = await EmblaAPI.synthesize(
+            text,
+            apiKey,
+            ttsOptions,
+            transcriptionOptions,
+            transcribe
+        );
         if (audioURL === undefined) {
             throw new Error("Error during speech synthesis");
         }

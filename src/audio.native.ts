@@ -1,4 +1,8 @@
-import type { AudioPlayer, TTSOptions } from "./common";
+import type {
+    AudioPlayer,
+    SpeechOptions,
+    TranscriptionOptions,
+} from "./common";
 import { EmblaAPI } from "./api";
 import { asciify } from "./util";
 import SoundPlayer from "react-native-sound-player";
@@ -47,10 +51,22 @@ const DUNNO_STRINGS: { [key: string]: string } = {
     dunno07: "Því miður veit ég það ekki.",
 };
 
+export function RNAudioSetup() {
+    // Circumvent bug on iOS:
+    // https://github.com/johnsonsu/react-native-sound-player/issues/8
+    const onFinishedLoading = SoundPlayer.addEventListener(
+        "FinishedLoadingURL",
+        (_success) => {
+            console.log("loaded url");
+        }
+    );
+    return () => onFinishedLoading.remove();
+}
+
 export class RNAudioPlayer implements AudioPlayer {
     private _fileExt = "mp3";
     private _audioURL = "https://embla.is/assets/audio";
-    async init(): Promise<void> {
+    async init(): Promise<any> {
         // AUDIO_FILES.forEach((name) => {
         //     console.log(name);
         //     // SoundPlayer.loadSoundFile(name, AUDIO_EXTENSION);
@@ -112,8 +128,20 @@ export class RNAudioPlayer implements AudioPlayer {
         SoundPlayer.stop();
     }
 
-    async speak(text: string, apiKey?: string, ttsOptions?: TTSOptions) {
-        const audioURL = await EmblaAPI.synthesize(text, apiKey, ttsOptions);
+    async speak(
+        text: string,
+        apiKey?: string,
+        ttsOptions?: SpeechOptions,
+        transcriptionOptions?: TranscriptionOptions,
+        transcribe?: boolean
+    ) {
+        const audioURL = await EmblaAPI.synthesize(
+            text,
+            apiKey,
+            ttsOptions,
+            transcriptionOptions,
+            transcribe
+        );
         if (audioURL === undefined) {
             throw new Error("Error during speech synthesis");
         }

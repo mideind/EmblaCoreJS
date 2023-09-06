@@ -25,9 +25,6 @@ export const SOFTWARE_VERSION = pkg.version;
 export const SOFTWARE_AUTHOR = pkg.author;
 export const SOFTWARE_LICENSE = pkg.license;
 
-// Speech recognition settings
-export const speechToTextLanguage = "is-IS";
-
 // Audio recording settings
 export const audioSampleRate = 16000;
 export const audioBitRate = 16;
@@ -37,7 +34,7 @@ export const audioNumChannels = 1;
 export const defaultServer = "https://api.greynir.is";
 export const tokenEndpoint = "/rat/v1/token";
 export const socketEndpoint = "/rat/v1/short_asr";
-export const speechSynthesisEndpoint = "/rat/v1/tts";
+export const speechSynthesisEndpoint = "/rat/v2/tts";
 export const clearHistoryEndpoint = "/rat/v1/clear_history";
 export const defaultQueryServer = "https://greynir.is";
 
@@ -46,20 +43,49 @@ export const requestTimeout = 10e3; // 10 seconds in milliseconds
 export const WAVHeaderLength = 44;
 
 // Speech synthesis
-export const defaultSpeechSynthesisSpeed = 1.0;
 export const defaultSpeechSynthesisVoice = "Guðrún";
-export const supportedSpeechSynthesisVoices = ["Guðrún", "Gunnar"];
 
 /** Options for the ASR service. */
 export interface ASROptions {
     engine?: string;
     language?: string;
+    sample_rate?: number;
+    bit_rate?: number;
+    channels?: number;
+    format?: string;
+    // Allow future attributes without type errors
+    [attr: string]: unknown;
 }
 
-/** Options for the TTS service. */
+/** Options for the TTS service __when performed by the query server__. */
 export interface TTSOptions {
     voice_id?: string;
     voice_speed?: number;
+    [attr: string]: unknown;
+}
+
+/** Newer interface for TTS options. */
+export interface SpeechOptions {
+    voice?: string;
+    speed: number;
+    text_format?: string;
+    audio_format?: string;
+    [attr: string]: unknown;
+}
+
+/** Options for transcribing text for TTS. */
+export interface TranscriptionOptions {
+    emails?: boolean;
+    dates?: boolean;
+    years?: boolean;
+    domains?: boolean;
+    urls?: boolean;
+    amounts?: boolean;
+    measurements?: boolean;
+    percentages?: boolean;
+    numbers?: boolean;
+    ordinals?: boolean;
+    [attr: string]: unknown;
 }
 
 // Responses from the server
@@ -67,6 +93,7 @@ export interface TTSOptions {
 interface ResponseMessage {
     type: string;
     code: number;
+    [attr: string]: unknown;
 }
 /** @internal */
 export interface GreetingsResponseMessage extends ResponseMessage {
@@ -85,6 +112,7 @@ export interface QueryResponseData {
     valid: boolean;
     answer?: string;
     audio?: string;
+    [attr: string]: unknown;
 }
 /** @internal */
 export interface QueryResponseMessage extends ResponseMessage {
@@ -145,13 +173,17 @@ export interface AudioPlayer {
      * @async
      * @param {string} text Text to speech synthesize.
      * @param {string?} apiKey Server API key.
-     * @param {TTSOptions?} ttsOptions Options for speech synthesis (Voice ID and speed).
+     * @param {SpeechOptions?} ttsOptions Options for speech synthesis.
+     * @param {TranscriptionOptions?} transcriptionOptions Options for transcription (only for Icelandic voices).
+     * @param {boolean?} transcribe Whether to phonetically transcribe text before TTS (only for Icelandic voices).
      * @throws {Error} If TTS service returned no audio.
      * @returns URL to speech synthesized audio file.
      */
     speak(
         text: string,
         apiKey?: string,
-        ttsOptions?: TTSOptions
+        ttsOptions?: SpeechOptions,
+        transcriptionOptions?: TranscriptionOptions,
+        transcribe?: boolean
     ): Promise<void>;
 }
