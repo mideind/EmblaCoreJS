@@ -67,6 +67,28 @@ Examples can be found in the directories `example/web` and `example/react-native
 
 Information on running them is found in the corresponding `README.md` files.
 
+## React Native usage
+
+The React Native version of EmblaCoreJS is published to `npm` as `@mideind/embla-core`.
+
+In order to work, apps making use of EmblaCoreJS must have permission to record audio.
+iOS apps must add the following to their `Info.plist` file:
+
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>Microphone permission is required for speech recognition.</string>
+```
+
+Android apps must have the following in their `AndroidManifest.xml` file:
+
+```xml
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
+
+The app must also request permission to record audio from the user. This can be done using
+e.g. the [react-native-permissions](https://www.npmjs.com/package/react-native-permissions)
+library.
+
 ## License
 
 EmblaCoreJS is Copyright &copy; 2023 [Miðeind ehf.](https://mideind.is)
@@ -101,9 +123,9 @@ GNU GPLv3 or other compatible licenses.
 
 EmblaCoreJS bundles the following libraries:
 
--   [RecordRTC](http://recordrtc.org/), Copyright &copy; [Muaz Khan](https://github.com/muaz-khan).
+- [RecordRTC](http://recordrtc.org/), Copyright &copy; [Muaz Khan](https://github.com/muaz-khan).
 
 The following libraries are peer dependencies (not included when bundled):
 
--   [react-native-sound-player](https://github.com/johnsonsu/react-native-sound-player), Copyright &copy; [Johnson Su](https://github.com/johnsonsu).
--   [@dr.pogodin/react-native-audio](https://github.com/birdofpreyru/react-native-audio), Copyright &copy; [Dr. Sergey Pogodin](https://dr.pogodin.studio)
+- [react-native-sound-player](https://github.com/johnsonsu/react-native-sound-player), Copyright &copy; [Johnson Su](https://github.com/johnsonsu).
+- [@dr.pogodin/react-native-audio](https://github.com/birdofpreyru/react-native-audio), Copyright &copy; [Dr. Sergey Pogodin](https://dr.pogodin.studio)
