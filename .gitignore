@@ -42,7 +42,10 @@ android.iml
 
 # Cocoapods
 #
-example/ios/Pods
+example/react-native/ios/Pods
+example/react-native/ios/Podfile.lock
+example/react-native/ios/EmblaCoreJSExample.xcworkspace
+
 
 # Ruby
 example/vendor/
