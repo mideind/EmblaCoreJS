@@ -23,6 +23,9 @@ describe("Util tests", () => {
     it("asciify should turn Guðrún into Gudrun", () => {
         const result = asciify("Guðrún");
         expect(result).toEqual("Gudrun");
+        expect(asciify("ð Ð á Á ú Ú í Í é É þ Þ ó Ó ý Ý ö Ö æ Æ")).toEqual(
+            "d D a A u U i I e E th TH o O y Y o O ae AE"
+        );
     });
     it("should capitalize first letter", () => {
         expect(capFirst("abcd")).toEqual("Abcd");
