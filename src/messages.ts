@@ -67,7 +67,7 @@ export class GreetingsOutputMessage {
         // Query options, which includes client details.
         const qOpts: QueryOptions = {};
 
-        qOpts.url = `${config.queryServer}/query.api`;
+        qOpts.url = config.queryServer;
         if (config.privateMode === false) {
             // Client details are only sent if the session is not private.
             if (config.clientID !== undefined) {
