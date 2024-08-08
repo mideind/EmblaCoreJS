@@ -1,6 +1,6 @@
 {
   "name": "@mideind/embla-core",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Core Embla functionality ported to TypeScript/JavaScript.",
   "main": "lib/react-native/embla-core.min.js",
   "react-native": "lib/react-native/embla-core.min.js",
